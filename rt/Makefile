@@ -14,7 +14,7 @@ libhart.a: harec $(libhart_srcs) $(libhart_objs) $(rtstart)
 	@printf 'HAREC\t$@\n'
 	@mkdir -p $(HARECACHE)/rt
 	@./harec -Nrt -t$(HARECACHE)/rt/rt.td -o $@.ssa $(libhart_srcs)
-	$(QBE) $(QBE_FLAGS) -t arm64 -Gm -o $@.s $@.ssa	# TODO: Remove arm64-specific tags and make /config.sh work
+	$(QBE) -o $@.s $@.ssa
 	@$(AS) -g -o $@.o $@.s
 	@$(AR) -csr $@ $@.o $(libhart_objs)
 	@rm $@.o $@.s $@.ssa

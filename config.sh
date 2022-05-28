@@ -6,27 +6,11 @@ CC=${CC:-cc}
 CFLAGS=${CFLAGS:-}
 LDFLAGS=${LDFLAGS:-}
 LD=${LD:-ld}
-QBE=${QBE:-qbe}
-QBE_FLAGS=""
+QBE="${QBE:-qbe} -t arm64 -Gm"	# Todo: do this programatically so it works on other platforms
 
 if [ `uname -s` = "OpenBSD" ]
 then
 	LD="${LD:-ld} -nopie"
-fi
-
-if [ `uname -s` = "Darwin" ]
-then
-	case $(arch) in
-		i386)
-			QBE_FLAGS="-t amd64_sysv -Gm"
-			;;
-		arm64)
-			QBE_FLAGS="-t arm64 -Gm"
-			;;
-		*)
-			printf "Unsupported Darwin arch $(arch).\n"
-			;;
-	esac
 fi
 
 for arg

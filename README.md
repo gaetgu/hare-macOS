@@ -36,13 +36,10 @@ Specifically, harec-generated assembly compiles but does not run. I am pretty su
 
 **Some other stuff:**
 
-- for whatever reason, I am getting this error on a clean make:
-  ![Screenshot of error](./ErrorSS.png)
-  Most of the stuff online seems to relate from the PPC-to-intel transition, with a little bit of M1 stuff in there as well. Nothing really helpful
+- Doesn't work on the BSDs/Linuxes right now since I hardcoded some mac-only arguments. I will change that soon so that it
+  will work on other platforms
 
-- no idea whether this will work on the `BSD`s/`linux`es, since I had to mess with some of the emit code to get it to build properly. I might spin up a couple of VMs in the future to check but for now this port is macOS-only (and I intend to remove the other platform stuff soon)
-
-- running `make check` fails under arm64. It kind of fails under `arch -x86_64 <insert shell here>`. This will remain the case at least until I can get the compiled (assembled?) assembly to run.
+- `make check` fails. Tons of stuff about "`Undefined symbols for architecture arm64:`". Fixing this is the current priority
 
 **Errors I ran into and what I did**
 
@@ -51,14 +48,6 @@ For those who think that this is comprehensive or even understandable, think aga
 - For the `.section "something"` errors, add `, "ax"` to the end of the line. This couldn't possibly go wrong, right?
 - For the `.section .text.something` errors, replace the entire line with `.text`. This couldn't possibly go wrong, right?
   (This one and the last one are caused due to the difference between the GAS and Mach-O assemblers.)
-- `error: ADR/ADRP relocations must be GOT relative`, `error: unknown AArch64 fixup kind!`: This is where I am currently stuck. Both of these can be fixed be replacing
-  ```asm
-    adrp x0, symbol
-    add x1, x1, #:lo12:symbol
-  ```
-  with
-  ```asm
-    adrp x0, symbol@PAGE
-    add x1, x1, #symbol@PAGEOFF
-  ```
-  I am pretty sure that this is an error with how QBE is outputting its arm asm (AFAIK it doesn't support M1 officially) so I might have to mess with that. Or write a bash script to manually do those replacements.
+- `error: ADR/ADRP relocations must be GOT relative`, `error: unknown AArch64 fixup kind!`: I actually did some stuff to `QBE`  (nothing massive, see diff [here](https://github.com/gaetgu/qbe-macOS/commit/524497fd68144f79c0e9b61b7f025c4cc4f72594)) to 
+  fix this.
+- `Undefined symbols for architecture arm64` (on `make check`): Nothing yet. Fixing this is the current priority.

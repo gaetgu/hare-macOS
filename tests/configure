@@ -53,7 +53,7 @@ tests/$t: libhart.a testmod.a tests/$t.ha
 	@HARECACHE=\$(HARECACHE) ./harec -o tests/$t.ssa tests/$t.ha
 	@\$(QBE) -o tests/$t.s tests/$t.ssa
 	@\$(AS) -g -o tests/$t.o tests/$t.s
-	@\$(LD) --gc-sections -T $rtscript -o tests/$t $rtstart tests/$t.o libhart.a testmod.a
+	@\$(LD) -o tests/$t $rtstart tests/$t.o libhart.a testmod.a # (for linux/BSD, not mac) --gc-sections -T $rtscript
 	@rm tests/$t.s tests/$t.ssa tests/$t.o
 
 check: tests/$t
