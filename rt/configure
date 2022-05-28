@@ -75,6 +75,34 @@ rt() {
 			rt: libhart.a rt/+openbsd/start+$arch.o
 			EOF
 			;;
+		Darwin)
+			case $arch in
+				i386)
+					arch=x86_64
+					;;
+				arm64)
+					arch=aarch64
+					;;
+				*)
+					printf "unsupported Darwin arch %s. (No seriously, are you on a PowerPC?)\n" "$(uname)" >&2
+					;;
+			esac
+			rtstart=rt/+darwin/start+$arch.o
+			cat <<-EOF
+			rtstart=rt/+darwin/start+$arch.o
+
+			libhart_srcs=\
+				rt/+darwin/errno.ha \
+				rt/+darwin/segmalloc.ha \
+				rt/+darwin/syscallno.ha \
+				rt/+darwin/syscalls.ha \
+
+			libhart_objs=\
+				rt/+darwin/syscall+$arch.o
+
+			rt: libhart.a rt/+darwin/start+$arch.o
+			EOF
+			;;
 		*)
 			printf "rt not supported for %s\n" "$(uname)" >&2
 			exit 1

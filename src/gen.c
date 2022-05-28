@@ -3187,7 +3187,7 @@ gen_function_decl(struct gen_context *ctx, const struct declaration *decl)
 		fini->kind = Q_DATA;
 		fini->exported = false;
 		fini->data.align = 8;
-		fini->data.section = ".fini_array";
+		fini->data.section = ".fini_array\" \"ax";		// Basically XSS injection, lol
 		fini->data.secflags = NULL;
 
 		size_t n = snprintf(NULL, 0, ".fini.%s", qdef->name);

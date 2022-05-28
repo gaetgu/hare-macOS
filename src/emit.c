@@ -311,9 +311,9 @@ emit_data(struct qbe_def *def, FILE *out)
 	} else if (def->data.section) {
 		fprintf(out, "section \"%s\"", def->data.section);
 	} else if (is_zeroes(&def->data.items)) {
-		fprintf(out, "section \".bss.%s\"", def->name);
+		fprintf(out, "section \".bss.%s\" \"ax\"", def->name);
 	} else {
-		fprintf(out, "section \".data.%s\"", def->name);
+		fprintf(out, "section \".data.%s\" \"a\"", def->name);
 	}
 	fprintf(out, "%s\ndata $%s = ", def->exported ? " export" : "",
 			def->name);

@@ -1,0 +1,14 @@
+section ".text.testmod.testfunc1" "ax" export
+function $testmod.testfunc1() {
+@start.0
+@body.1
+	ret
+}
+
+section ".text.testmod.testfunc2" "ax" export
+function $testmod.testfunc2() {
+@start.2
+@body.3
+	ret
+}
+

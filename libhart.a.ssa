@@ -1,0 +1,2194 @@
+section ".text.rt.segmalloc" "ax"
+function l $rt.segmalloc(l %n) {
+@start.0
+	%param.1 =l alloc8 8
+	%binding.5 =l alloc8 8
+	storel %n, %param.1
+@body.2
+	# gen lowered cast
+	%cast.7 =l copy 0
+	%load.8 =l loadl %param.1
+	%.9 =w or 1, 2
+	%.10 =w or 2, 4096
+	%.11 =w neg 1
+	%returns.6 =l call $rt.mmap(l %cast.7, l %load.8, w %.9, w %.10, w %.11, l 0)
+	storel %returns.6, %binding.5
+	%load.17 =l loadl %binding.5
+	%cast.18 =l copy %load.17
+	%cast.19 =w copy %cast.18
+	%.20 =w neg 12
+	%.16 =w ceqw %cast.19, %.20
+	jnz %.16, @true.13, @false.14
+@true.13
+	# gen lowered cast
+	%cast.21 =l copy 0
+	%.12 =l copy %cast.21
+	jmp @.15
+@false.14
+	# gen lowered cast
+	%load.22 =l loadl %binding.5
+	%.12 =l copy %load.22
+@.15
+	ret %.12
+@.3
+	ret
+}
+
+section ".text.rt.segfree" "ax"
+function w $rt.segfree(l %p, l %s) {
+@start.23
+	%param.24 =l alloc8 8
+	%param.25 =l alloc8 8
+	storel %p, %param.24
+	storel %s, %param.25
+@body.26
+	%load.28 =l loadl %param.24
+	%load.29 =l loadl %param.25
+	%returns.27 =w call $rt.munmap(l %load.28, l %load.29)
+	ret %returns.27
+}
+
+section ".text.rt.write" "ax" export
+function l $rt.write(w %fd, l %buf, l %count) {
+@start.30
+	%param.31 =l alloc4 4
+	%param.32 =l alloc8 8
+	%param.33 =l alloc8 8
+	storew %fd, %param.31
+	storel %buf, %param.32
+	storel %count, %param.33
+@body.34
+	%load.36 =w loadsw %param.31
+	%cast.37 =l extsw %load.36
+	%load.38 =l loadl %param.32
+	%cast.39 =l copy %load.38
+	%cast.40 =l copy %cast.39
+	%load.41 =l loadl %param.33
+	%cast.42 =l copy %load.41
+	%returns.35 =l call $rt.syscall3(l 4, l %cast.37, l %cast.40, l %cast.42)
+	%cast.43 =l copy %returns.35
+	ret %cast.43
+}
+
+section ".text.rt.close" "ax" export
+function w $rt.close(w %fd) {
+@start.44
+	%param.45 =l alloc4 4
+	storew %fd, %param.45
+@body.46
+	%load.48 =w loadsw %param.45
+	%cast.49 =l extsw %load.48
+	%returns.47 =l call $rt.syscall1(l 6, l %cast.49)
+	%cast.50 =w copy %returns.47
+	ret %cast.50
+}
+
+section ".text.rt.dup2" "ax" export
+function w $rt.dup2(w %old, w %new) {
+@start.51
+	%param.52 =l alloc4 4
+	%param.53 =l alloc4 4
+	storew %old, %param.52
+	storew %new, %param.53
+@body.54
+	%load.56 =w loadsw %param.52
+	%cast.57 =l extsw %load.56
+	%load.58 =w loadsw %param.53
+	%cast.59 =l extsw %load.58
+	%returns.55 =l call $rt.syscall2(l 90, l %cast.57, l %cast.59)
+	%cast.60 =w copy %returns.55
+	ret %cast.60
+}
+
+section ".text.rt.getpid" "ax" export
+function w $rt.getpid() {
+@start.61
+@body.62
+	%returns.63 =l call $rt.syscall0(l 20)
+	%cast.64 =w copy %returns.63
+	ret %cast.64
+}
+
+section ".text.rt.exit" "ax" export
+function $rt.exit(w %status) {
+@start.65
+	%param.66 =l alloc4 4
+	storew %status, %param.66
+@body.67
+	%load.71 =w loadsw %param.66
+	%cast.72 =l extsw %load.71
+	%returns.70 =l call $rt.syscall1(l 1, l %cast.72)
+@.68
+	ret
+}
+
+section ".text.rt.fork" "ax" export
+function w $rt.fork() {
+@start.73
+@body.74
+	%returns.75 =l call $rt.syscall0(l 2)
+	%cast.76 =w copy %returns.75
+	ret %cast.76
+}
+
+section ".text.rt.execve" "ax" export
+function w $rt.execve(l %path, l %argv, l %envp) {
+@start.77
+	%param.78 =l alloc8 8
+	%param.79 =l alloc8 8
+	%param.80 =l alloc8 8
+	storel %path, %param.78
+	storel %argv, %param.79
+	storel %envp, %param.80
+@body.81
+	%load.83 =l loadl %param.78
+	%cast.84 =l copy %load.83
+	%cast.85 =l copy %cast.84
+	%load.86 =l loadl %param.79
+	%cast.87 =l copy %load.86
+	%cast.88 =l copy %cast.87
+	%load.89 =l loadl %param.80
+	%cast.90 =l copy %load.89
+	%cast.91 =l copy %cast.90
+	%returns.82 =l call $rt.syscall3(l 59, l %cast.85, l %cast.88, l %cast.91)
+	%cast.92 =w copy %returns.82
+	ret %cast.92
+}
+
+section ".text.rt.wait4" "ax" export
+function $rt.wait4(w %pid, l %status, w %options, l %rusage) {
+@start.93
+	%param.94 =l alloc4 4
+	%param.95 =l alloc8 8
+	%param.96 =l alloc4 4
+	%param.97 =l alloc8 8
+	storew %pid, %param.94
+	storel %status, %param.95
+	storew %options, %param.96
+	storel %rusage, %param.97
+@body.98
+	%load.102 =w loadsw %param.94
+	%cast.103 =l extsw %load.102
+	%load.104 =l loadl %param.95
+	%cast.105 =l copy %load.104
+	%cast.106 =l copy %cast.105
+	%load.107 =w loadsw %param.96
+	%cast.108 =l extsw %load.107
+	%load.109 =l loadl %param.97
+	%cast.110 =l copy %load.109
+	%cast.111 =l copy %cast.110
+	%returns.101 =l call $rt.syscall4(l 7, l %cast.103, l %cast.106, l %cast.108, l %cast.111)
+@.99
+	ret
+}
+
+section ".text.rt.wifexited" "ax" export
+function w $rt.wifexited(w %status) {
+@start.112
+	%param.113 =l alloc4 4
+	storew %status, %param.113
+@body.114
+	%load.117 =w loadsw %param.113
+	%returns.116 =w call $rt.wtermsig(w %load.117)
+	%.115 =w ceqw %returns.116, 0
+	ret %.115
+}
+
+section ".text.rt.wexitstatus" "ax" export
+function w $rt.wexitstatus(w %status) {
+@start.118
+	%param.119 =l alloc4 4
+	storew %status, %param.119
+@body.120
+	%load.123 =w loadsw %param.119
+	%.122 =w and %load.123, 65280
+	%.121 =w sar %.122, 8
+	ret %.121
+}
+
+section ".text.rt.wtermsig" "ax" export
+function w $rt.wtermsig(w %status) {
+@start.124
+	%param.125 =l alloc4 4
+	storew %status, %param.125
+@body.126
+	%load.128 =w loadsw %param.125
+	%.127 =w and %load.128, 127
+	ret %.127
+}
+
+section ".text.rt.wifsignaled" "ax" export
+function w $rt.wifsignaled(w %status) {
+@start.129
+	%param.130 =l alloc4 4
+	storew %status, %param.130
+@body.131
+	%load.140 =w loadsw %param.130
+	%returns.139 =w call $rt.wtermsig(w %load.140)
+	%.138 =w cnew %returns.139, 127
+	%.135 =w copy %.138
+	jnz %.135, @.136, @.137
+@.136
+	%load.143 =w loadsw %param.130
+	%returns.142 =w call $rt.wtermsig(w %load.143)
+	%.141 =w cnew %returns.142, 0
+	%.135 =w copy %.141
+	jmp @.137
+@.137
+	%.132 =w copy %.135
+	jnz %.132, @.133, @.134
+@.133
+	%load.145 =w loadsw %param.130
+	%.144 =w cnew %load.145, 19
+	%.132 =w copy %.144
+	jmp @.134
+@.134
+	ret %.132
+}
+
+section ".text.rt.kill" "ax" export
+function w $rt.kill(w %pid, w %signal) {
+@start.146
+	%param.147 =l alloc4 4
+	%param.148 =l alloc4 4
+	storew %pid, %param.147
+	storew %signal, %param.148
+@body.149
+	%load.151 =w loadsw %param.147
+	%cast.152 =l extsw %load.151
+	%load.153 =w loadsw %param.148
+	%cast.154 =l extsw %load.153
+	%returns.150 =l call $rt.syscall2(l 37, l %cast.152, l %cast.154)
+	%cast.155 =w copy %returns.150
+	ret %cast.155
+}
+
+section ".text.rt.pipe2" "ax" export
+function w $rt.pipe2(l %pipefd, w %flags) {
+@start.156
+	%param.157 =l alloc8 8
+	%param.158 =l alloc4 4
+	storel %pipefd, %param.157
+	storew %flags, %param.158
+@body.159
+	%load.161 =l loadl %param.157
+	%cast.162 =l copy %load.161
+	%cast.163 =l copy %cast.162
+	%load.164 =w loadsw %param.158
+	%cast.165 =l extsw %load.164
+	%returns.160 =l call $rt.syscall2(l 542, l %cast.163, l %cast.165)
+	%cast.166 =w copy %returns.160
+	ret %cast.166
+}
+
+section ".text.rt.mmap" "ax" export
+function l $rt.mmap(l %addr, l %length, w %prot, w %flags, w %fd, l %offs) {
+@start.167
+	%param.168 =l alloc8 8
+	%param.169 =l alloc8 8
+	%param.170 =l alloc4 4
+	%param.171 =l alloc4 4
+	%param.172 =l alloc4 4
+	%param.173 =l alloc8 8
+	storel %addr, %param.168
+	storel %length, %param.169
+	storew %prot, %param.170
+	storew %flags, %param.171
+	storew %fd, %param.172
+	storel %offs, %param.173
+@body.174
+	%load.178 =l loadl %param.168
+	%cast.179 =l copy %load.178
+	%cast.180 =l copy %cast.179
+	%load.181 =l loadl %param.169
+	%cast.182 =l copy %load.181
+	%load.183 =w loaduw %param.170
+	%cast.184 =l extuw %load.183
+	%load.185 =w loaduw %param.171
+	%cast.186 =l extuw %load.185
+	%load.187 =w loadsw %param.172
+	%cast.188 =l extsw %load.187
+	%load.189 =l loadl %param.173
+	%cast.190 =l copy %load.189
+	%returns.177 =l call $rt.syscall6(l 477, l %cast.180, l %cast.182, l %cast.184, l %cast.186, l %cast.188, l %cast.190)
+	%cast.191 =l copy %returns.177
+	%cast.192 =l copy %cast.191
+	ret %cast.192
+@.175
+	ret
+}
+
+section ".text.rt.munmap" "ax" export
+function w $rt.munmap(l %addr, l %length) {
+@start.193
+	%param.194 =l alloc8 8
+	%param.195 =l alloc8 8
+	storel %addr, %param.194
+	storel %length, %param.195
+@body.196
+	%load.198 =l loadl %param.194
+	%cast.199 =l copy %load.198
+	%cast.200 =l copy %cast.199
+	%load.201 =l loadl %param.195
+	%cast.202 =l copy %load.201
+	%returns.197 =l call $rt.syscall2(l 73, l %cast.200, l %cast.202)
+	%cast.203 =w copy %returns.197
+	ret %cast.203
+}
+
+# str [id: 2843771249; size: 24]
+type :type.205 = align 8 { l 3 }
+
+# const str [id: 2826993630; size: 24]
+type :type.210 = align 8 { l 3 }
+
+section ".data.strdata.212" "a"
+data $strdata.212 = { b "Abort: " }
+
+section ".data.strdata.226" "a"
+data $strdata.226 = { b 10 }
+
+section ".text.rt.abort" "ax" export
+function $rt.abort(:type.205 %msg) {
+@start.204
+	%binding.209 =l alloc8 24
+	%object.211 =l alloc8 24
+	%object.225 =l alloc8 24
+@body.206
+	# gen lowered cast
+	%.213 =l copy %object.211
+	storel $strdata.212, %.213
+	%.213 =l add %.213, 8
+	storel 7, %.213
+	%.213 =l add %.213, 8
+	storel 7, %.213
+	%.215 =l copy %binding.209
+	%.216 =l copy %object.211
+	%.214 =l loadl %.216
+	storel %.214, %.215
+	%.216 =l add %.216, 8
+	%.215 =l add %.215, 8
+	%.214 =l loadl %.216
+	storel %.214, %.215
+	%.216 =l add %.216, 8
+	%.215 =l add %.215, 8
+	%.214 =l loadl %.216
+	storel %.214, %.215
+	# gen lowered cast
+	# gen lowered cast
+	%returns.218 =l call $rt.constchar(:type.205 %binding.209)
+	%.219 =l add %binding.209, 8
+	%.219 =l loadl %.219
+	%returns.217 =l call $rt.write(w 2, l %returns.218, l %.219)
+	# gen lowered cast
+	%returns.221 =l call $rt.constchar(:type.205 %msg)
+	%.222 =l add %msg, 8
+	%.222 =l loadl %.222
+	%returns.220 =l call $rt.write(w 2, l %returns.221, l %.222)
+	# gen lowered cast
+	%.227 =l copy %object.225
+	storel $strdata.226, %.227
+	%.227 =l add %.227, 8
+	storel 1, %.227
+	%.227 =l add %.227, 8
+	storel 1, %.227
+	%returns.224 =l call $rt.constchar(:type.205 %object.225)
+	%returns.223 =l call $rt.write(w 2, l %returns.224, l 1)
+	%returns.229 =w call $rt.getpid()
+	%returns.228 =w call $rt.kill(w %returns.229, w 6)
+@.207
+	ret
+}
+
+section ".data.strdata.230" "a"
+data $strdata.230 = { b "slice or array access out of bounds" }
+
+section ".data.strdata.231" "a"
+data $strdata.231 = { b "type assertion failed" }
+
+section ".data.strdata.232" "a"
+data $strdata.232 = { b "out of memory" }
+
+section ".data.strdata.233" "a"
+data $strdata.233 = { b "static append exceeds slice capacity" }
+
+section ".data.strdata.234" "a"
+data $strdata.234 = { b "unreachable code" }
+
+section ".data.rt.reasons" "a"
+data $rt.reasons = { l $strdata.230, l 35, l 35, l $strdata.231, l 21, l 21, l $strdata.232, l 13, l 13, l $strdata.233, l 36, l 36, l $strdata.234, l 16, l 16 }
+
+section ".data.strdata.242" "a"
+data $strdata.242 = { b "Abort: " }
+
+section ".data.strdata.249" "a"
+data $strdata.249 = { b ": " }
+
+# [5]str [id: 3528093364; size: 120]
+type :type.265 = align 8 { :type.205 5 }
+
+section ".data.strdata.273" "a"
+data $strdata.273 = { b "rt/abort.ha:24:3" }
+
+section ".data.strdata.282" "a"
+data $strdata.282 = { b "rt/abort.ha:24:5" }
+
+section ".data.strdata.288" "a"
+data $strdata.288 = { b 10 }
+
+section ".text.rt.abort_fixed" "ax" export
+function $rt.abort_fixed(:type.205 %loc, w %i) {
+@start.235
+	%param.236 =l alloc4 4
+	%binding.240 =l alloc8 24
+	%object.241 =l alloc8 24
+	%binding.247 =l alloc8 24
+	%object.248 =l alloc8 24
+	%object.272 =l alloc8 24
+	%object.281 =l alloc8 24
+	%object.287 =l alloc8 24
+	storew %i, %param.236
+@body.237
+	# gen lowered cast
+	%.243 =l copy %object.241
+	storel $strdata.242, %.243
+	%.243 =l add %.243, 8
+	storel 7, %.243
+	%.243 =l add %.243, 8
+	storel 7, %.243
+	%.245 =l copy %binding.240
+	%.246 =l copy %object.241
+	%.244 =l loadl %.246
+	storel %.244, %.245
+	%.246 =l add %.246, 8
+	%.245 =l add %.245, 8
+	%.244 =l loadl %.246
+	storel %.244, %.245
+	%.246 =l add %.246, 8
+	%.245 =l add %.245, 8
+	%.244 =l loadl %.246
+	storel %.244, %.245
+	# gen lowered cast
+	%.250 =l copy %object.248
+	storel $strdata.249, %.250
+	%.250 =l add %.250, 8
+	storel 2, %.250
+	%.250 =l add %.250, 8
+	storel 2, %.250
+	%.252 =l copy %binding.247
+	%.253 =l copy %object.248
+	%.251 =l loadl %.253
+	storel %.251, %.252
+	%.253 =l add %.253, 8
+	%.252 =l add %.252, 8
+	%.251 =l loadl %.253
+	storel %.251, %.252
+	%.253 =l add %.253, 8
+	%.252 =l add %.252, 8
+	%.251 =l loadl %.253
+	storel %.251, %.252
+	# gen lowered cast
+	# gen lowered cast
+	%returns.255 =l call $rt.constchar(:type.205 %binding.240)
+	%.256 =l add %binding.240, 8
+	%.256 =l loadl %.256
+	%returns.254 =l call $rt.write(w 2, l %returns.255, l %.256)
+	# gen lowered cast
+	%returns.258 =l call $rt.constchar(:type.205 %loc)
+	%.259 =l add %loc, 8
+	%.259 =l loadl %.259
+	%returns.257 =l call $rt.write(w 2, l %returns.258, l %.259)
+	# gen lowered cast
+	# gen lowered cast
+	%returns.261 =l call $rt.constchar(:type.205 %binding.247)
+	%.262 =l add %binding.247, 8
+	%.262 =l loadl %.262
+	%returns.260 =l call $rt.write(w 2, l %returns.261, l %.262)
+	# gen lowered cast
+	# gen lowered cast
+	%load.267 =w loadsw %param.236
+	%cast.268 =l extsw %load.267
+	%.266 =l mul %cast.268, 24
+	%.266 =l add $rt.reasons, %.266
+	%.269 =w cultl %cast.268, 5
+	jnz %.269, @.271, @.270
+@.270
+	%.274 =l copy %object.272
+	storel $strdata.273, %.274
+	%.274 =l add %.274, 8
+	storel 16, %.274
+	%.274 =l add %.274, 8
+	storel 16, %.274
+	call $rt.abort_fixed(:type.210 %object.272, l 0)
+@.271
+	%returns.264 =l call $rt.constchar(:type.205 %.266)
+	# gen lowered cast
+	%load.276 =w loadsw %param.236
+	%cast.277 =l extsw %load.276
+	%.275 =l mul %cast.277, 24
+	%.275 =l add $rt.reasons, %.275
+	%.278 =w cultl %cast.277, 5
+	jnz %.278, @.280, @.279
+@.279
+	%.283 =l copy %object.281
+	storel $strdata.282, %.283
+	%.283 =l add %.283, 8
+	storel 16, %.283
+	%.283 =l add %.283, 8
+	storel 16, %.283
+	call $rt.abort_fixed(:type.210 %object.281, l 0)
+@.280
+	%.284 =l add %.275, 8
+	%.284 =l loadl %.284
+	%returns.263 =l call $rt.write(w 2, l %returns.264, l %.284)
+	# gen lowered cast
+	%.289 =l copy %object.287
+	storel $strdata.288, %.289
+	%.289 =l add %.289, 8
+	storel 1, %.289
+	%.289 =l add %.289, 8
+	storel 1, %.289
+	%returns.286 =l call $rt.constchar(:type.205 %object.287)
+	%returns.285 =l call $rt.write(w 2, l %returns.286, l 1)
+	%returns.291 =w call $rt.getpid()
+	%returns.290 =w call $rt.kill(w %returns.291, w 6)
+@.238
+	ret
+}
+
+# struct { data: nullable *[*]u8, length: size, capacity: size, } [id: 3668055749; size: 24]
+type :type.298 = align 8 { l 1, l 1, l 1 }
+
+section ".text.rt.constchar" "ax"
+function l $rt.constchar(:type.205 %s) {
+@start.292
+	%binding.296 =l alloc8 8
+@body.293
+	storel %s, %binding.296
+	%load.297 =l loadl %binding.296
+	%field.299 =l add %load.297, 0
+	%load.300 =l loadl %field.299
+	ret %load.300
+@.294
+	ret
+}
+
+# [2]int [id: 1340221163; size: 8]
+type :type.307 = align 4 { w 2 }
+
+section ".data.strdata.329" "a"
+data $strdata.329 = { b "rt/compile.ha:9:2" }
+
+section ".data.strdata.339" "a"
+data $strdata.339 = { b "rt/compile.ha:10:2" }
+
+section ".data.strdata.346" "a"
+data $strdata.346 = { b "./harec", b 0 }
+
+# [3]nullable *const char [id: 2441253083; size: 24]
+type :type.352 = align 8 { l 3 }
+
+section ".data.strdata.357" "a"
+data $strdata.357 = { b "-", b 0 }
+
+# [2]nullable *const char [id: 3187024042; size: 16]
+type :type.361 = align 8 { l 2 }
+
+section ".data.strdata.365" "a"
+data $strdata.365 = { b "HARECACHE=mod", b 0 }
+
+section ".data.strdata.371" "a"
+data $strdata.371 = { b "Assertion failed: rt/compile.ha:25:2" }
+
+section ".data.strdata.381" "a"
+data $strdata.381 = { b "rt/compile.ha:27:23: fork(2) failed" }
+
+section ".data.strdata.390" "a"
+data $strdata.390 = { b "rt/compile.ha:28:2" }
+
+section ".data.strdata.413" "a"
+data $strdata.413 = { b "rt/compile.ha:32:4" }
+
+section ".data.strdata.428" "a"
+data $strdata.428 = { b "rt/compile.ha:33:31: write(2) failed" }
+
+section ".data.strdata.439" "a"
+data $strdata.439 = { b "rt/compile.ha:37:2" }
+
+section ".data.strdata.461" "a"
+data $strdata.461 = { b "Assertion failed: rt/compile.ha:43:2" }
+
+section ".text.rt.compile" "ax" export
+function w $rt.compile(:type.210 %src) {
+@start.301
+	%binding.305 =l alloc4 4
+	%binding.306 =l alloc4 8
+	%binding.312 =l alloc4 4
+	%object.328 =l alloc8 24
+	%object.338 =l alloc8 24
+	%binding.344 =l alloc8 24
+	%object.345 =l alloc8 24
+	%binding.351 =l alloc8 24
+	%object.356 =l alloc8 24
+	%binding.360 =l alloc8 16
+	%object.364 =l alloc8 24
+	%object.370 =l alloc8 24
+	%object.380 =l alloc8 24
+	%object.389 =l alloc8 24
+	%binding.393 =l alloc8 8
+	%binding.399 =l alloc8 8
+	%binding.405 =l alloc8 8
+	%object.412 =l alloc8 24
+	%object.427 =l alloc8 24
+	%object.438 =l alloc8 24
+	%object.460 =l alloc8 24
+@body.302
+	storew 0, %binding.305
+	%item.308 =l add %binding.306, 0
+	%.309 =w neg 1
+	storew %.309, %item.308
+	%item.308 =l add %binding.306, 4
+	%.310 =w neg 1
+	storew %.310, %item.308
+	%returns.311 =w call $rt.pipe2(l %binding.306, w 0)
+	# gen lowered cast
+	%returns.313 =w call $rt.fork()
+	storew %returns.313, %binding.312
+	%load.319 =w loadsw %binding.312
+	%.318 =w ceqw %load.319, 0
+	jnz %.318, @true.315, @false.316
+@true.315
+	# gen lowered cast
+	%cast.324 =l extsw 1
+	%.323 =l mul %cast.324, 4
+	%.323 =l add %binding.306, %.323
+	%.325 =w cultl %cast.324, 2
+	jnz %.325, @.327, @.326
+@.326
+	%.330 =l copy %object.328
+	storel $strdata.329, %.330
+	%.330 =l add %.330, 8
+	storel 17, %.330
+	%.330 =l add %.330, 8
+	storel 17, %.330
+	call $rt.abort_fixed(:type.210 %object.328, l 0)
+@.327
+	%load.331 =w loadsw %.323
+	%returns.322 =w call $rt.close(w %load.331)
+	# gen lowered cast
+	%cast.334 =l extsw 0
+	%.333 =l mul %cast.334, 4
+	%.333 =l add %binding.306, %.333
+	%.335 =w cultl %cast.334, 2
+	jnz %.335, @.337, @.336
+@.336
+	%.340 =l copy %object.338
+	storel $strdata.339, %.340
+	%.340 =l add %.340, 8
+	storel 18, %.340
+	%.340 =l add %.340, 8
+	storel 18, %.340
+	call $rt.abort_fixed(:type.210 %object.338, l 0)
+@.337
+	%load.341 =w loadsw %.333
+	%returns.332 =w call $rt.dup2(w %load.341, w 0)
+	%returns.342 =w call $rt.close(w 1)
+	%returns.343 =w call $rt.close(w 2)
+	# gen lowered cast
+	%.347 =l copy %object.345
+	storel $strdata.346, %.347
+	%.347 =l add %.347, 8
+	storel 8, %.347
+	%.347 =l add %.347, 8
+	storel 8, %.347
+	%.349 =l copy %binding.344
+	%.350 =l copy %object.345
+	%.348 =l loadl %.350
+	storel %.348, %.349
+	%.350 =l add %.350, 8
+	%.349 =l add %.349, 8
+	%.348 =l loadl %.350
+	storel %.348, %.349
+	%.350 =l add %.350, 8
+	%.349 =l add %.349, 8
+	%.348 =l loadl %.350
+	storel %.348, %.349
+	%item.353 =l add %binding.351, 0
+	# gen lowered cast
+	# gen lowered cast
+	%returns.354 =l call $rt.constchar(:type.205 %binding.344)
+	storel %returns.354, %item.353
+	%item.353 =l add %binding.351, 8
+	# gen lowered cast
+	%.358 =l copy %object.356
+	storel $strdata.357, %.358
+	%.358 =l add %.358, 8
+	storel 2, %.358
+	%.358 =l add %.358, 8
+	storel 2, %.358
+	%returns.355 =l call $rt.constchar(:type.205 %object.356)
+	storel %returns.355, %item.353
+	%item.353 =l add %binding.351, 16
+	# gen lowered cast
+	%cast.359 =l copy 0
+	storel %cast.359, %item.353
+	%item.362 =l add %binding.360, 0
+	# gen lowered cast
+	%.366 =l copy %object.364
+	storel $strdata.365, %.366
+	%.366 =l add %.366, 8
+	storel 14, %.366
+	%.366 =l add %.366, 8
+	storel 14, %.366
+	%returns.363 =l call $rt.constchar(:type.205 %object.364)
+	storel %returns.363, %item.362
+	%item.362 =l add %binding.360, 8
+	# gen lowered cast
+	%cast.367 =l copy 0
+	storel %cast.367, %item.362
+	# gen lowered cast
+	%returns.369 =l call $rt.constchar(:type.205 %binding.344)
+	# gen lowered cast
+	# gen lowered cast
+	%returns.368 =w call $rt.execve(l %returns.369, l %binding.351, l %binding.360)
+	%.372 =l copy %object.370
+	storel $strdata.371, %.372
+	%.372 =l add %.372, 8
+	storel 36, %.372
+	%.372 =l add %.372, 8
+	storel 36, %.372
+	call $rt.abort(:type.210 %object.370)
+@.320
+@false.316
+	%load.378 =w loadsw %binding.312
+	%.379 =w neg 1
+	%.377 =w cnew %load.378, %.379
+	jnz %.377, @passed.376, @failed.375
+@failed.375
+	%.382 =l copy %object.380
+	storel $strdata.381, %.382
+	%.382 =l add %.382, 8
+	storel 35, %.382
+	%.382 =l add %.382, 8
+	storel 35, %.382
+	call $rt.abort(:type.205 %object.380)
+@passed.376
+	# gen lowered cast
+	%cast.385 =l extsw 0
+	%.384 =l mul %cast.385, 4
+	%.384 =l add %binding.306, %.384
+	%.386 =w cultl %cast.385, 2
+	jnz %.386, @.388, @.387
+@.387
+	%.391 =l copy %object.389
+	storel $strdata.390, %.391
+	%.391 =l add %.391, 8
+	storel 18, %.391
+	%.391 =l add %.391, 8
+	storel 18, %.391
+	call $rt.abort_fixed(:type.210 %object.389, l 0)
+@.388
+	%load.392 =w loadsw %.384
+	%returns.383 =w call $rt.close(w %load.392)
+	# gen lowered cast
+	# gen lowered cast
+	%returns.394 =l call $rt.constchar(:type.205 %src)
+	storel %returns.394, %binding.393
+	storel 0, %binding.399
+@loop.395
+	%load.401 =l loadl %binding.399
+	%.402 =l add %src, 8
+	%.402 =l loadl %.402
+	%.400 =w cultl %load.401, %.402
+	jnz %.400, @body.396, @.397
+@body.396
+	# gen lowered cast
+	%cast.408 =l extsw 1
+	%.407 =l mul %cast.408, 4
+	%.407 =l add %binding.306, %.407
+	%.409 =w cultl %cast.408, 2
+	jnz %.409, @.411, @.410
+@.410
+	%.414 =l copy %object.412
+	storel $strdata.413, %.414
+	%.414 =l add %.414, 8
+	storel 18, %.414
+	%.414 =l add %.414, 8
+	storel 18, %.414
+	call $rt.abort_fixed(:type.210 %object.412, l 0)
+@.411
+	%load.415 =w loadsw %.407
+	# gen lowered cast
+	%load.416 =l loadl %binding.393
+	%load.419 =l loadl %binding.399
+	%.418 =l mul %load.419, 1
+	%.418 =l add %load.416, %.418
+	%.421 =l add %src, 8
+	%.421 =l loadl %.421
+	%load.422 =l loadl %binding.399
+	%.420 =l sub %.421, %load.422
+	%returns.406 =l call $rt.write(w %load.415, l %.418, l %.420)
+	storel %returns.406, %binding.405
+	%load.426 =l loadl %binding.405
+	%.425 =w cugtl %load.426, 0
+	jnz %.425, @passed.424, @failed.423
+@failed.423
+	%.429 =l copy %object.427
+	storel $strdata.428, %.429
+	%.429 =l add %.429, 8
+	storel 36, %.429
+	%.429 =l add %.429, 8
+	storel 36, %.429
+	call $rt.abort(:type.205 %object.427)
+@passed.424
+	%load.430 =l loadl %binding.399
+	%load.431 =l loadl %binding.405
+	%load.430 =l add %load.430, %load.431
+	storel %load.430, %binding.399
+@.403
+@after.398
+	jmp @loop.395
+@.397
+	# gen lowered cast
+	%cast.434 =l extsw 1
+	%.433 =l mul %cast.434, 4
+	%.433 =l add %binding.306, %.433
+	%.435 =w cultl %cast.434, 2
+	jnz %.435, @.437, @.436
+@.436
+	%.440 =l copy %object.438
+	storel $strdata.439, %.440
+	%.440 =l add %.440, 8
+	storel 18, %.440
+	%.440 =l add %.440, 8
+	storel 18, %.440
+	call $rt.abort_fixed(:type.210 %object.438, l 0)
+@.437
+	%load.441 =w loadsw %.433
+	%returns.432 =w call $rt.close(w %load.441)
+	# gen lowered cast
+	%load.442 =w loadsw %binding.312
+	# gen lowered cast
+	%cast.443 =l copy 0
+	call $rt.wait4(w %load.442, l %binding.305, w 0, l %cast.443)
+@.373
+@.317
+	%load.449 =w loadsw %binding.305
+	%returns.448 =w call $rt.wifexited(w %load.449)
+	jnz %returns.448, @true.445, @false.446
+@true.445
+	%load.451 =w loadsw %binding.305
+	%returns.450 =w call $rt.wexitstatus(w %load.451)
+	%.444 =w copy %returns.450
+	jmp @.447
+@false.446
+	%load.457 =w loadsw %binding.305
+	%returns.456 =w call $rt.wifsignaled(w %load.457)
+	jnz %returns.456, @true.453, @false.454
+@true.453
+	%load.459 =w loadsw %binding.305
+	%returns.458 =w call $rt.wtermsig(w %load.459)
+	%.452 =w copy %returns.458
+	jmp @.455
+@false.454
+	%.462 =l copy %object.460
+	storel $strdata.461, %.462
+	%.462 =l add %.462, 8
+	storel 36, %.462
+	%.462 =l add %.462, 8
+	storel 36, %.462
+	call $rt.abort(:type.210 %object.460)
+@.455
+	%.444 =w copy %.452
+@.447
+	ret %.444
+@.303
+	ret
+}
+
+# struct { data: nullable *void, length: size, capacity: size, } [id: 2264061666; size: 24]
+type :type.471 = align 8 { l 1, l 1, l 1 }
+
+section ".data.strdata.504" "a"
+data $strdata.504 = { b "rt/ensure.ha:13:23: slice out of memory (overflow)" }
+
+section ".data.strdata.548" "a"
+data $strdata.548 = { b "Assertion failed: rt/ensure.ha:22:1" }
+
+section ".text.rt.ensure" "ax" export
+function $rt.ensure(l %s, l %membsz) {
+@start.463
+	%param.464 =l alloc8 8
+	%param.465 =l alloc8 8
+	%binding.469 =l alloc8 8
+	%object.503 =l alloc8 24
+	%binding.523 =l alloc8 8
+	%object.547 =l alloc8 24
+	storel %s, %param.464
+	storel %membsz, %param.465
+@body.466
+	%load.470 =l loadl %param.464
+	%field.472 =l add %load.470, 16
+	%load.473 =l loadl %field.472
+	storel %load.473, %binding.469
+	%load.479 =l loadl %binding.469
+	%load.480 =l loadl %param.464
+	%field.481 =l add %load.480, 8
+	%load.482 =l loadl %field.481
+	%.478 =w cugel %load.479, %load.482
+	jnz %.478, @true.475, @false.476
+@true.475
+	ret
+@.483
+@false.476
+@.477
+@loop.485
+	%load.490 =l loadl %binding.469
+	%load.491 =l loadl %param.464
+	%field.492 =l add %load.491, 8
+	%load.493 =l loadl %field.492
+	%.489 =w cultl %load.490, %load.493
+	jnz %.489, @body.486, @.487
+@body.486
+	%load.499 =l loadl %binding.469
+	%load.500 =l loadl %param.464
+	%field.501 =l add %load.500, 16
+	%load.502 =l loadl %field.501
+	%.498 =w cugel %load.499, %load.502
+	jnz %.498, @passed.497, @failed.496
+@failed.496
+	%.505 =l copy %object.503
+	storel $strdata.504, %.505
+	%.505 =l add %.505, 8
+	storel 50, %.505
+	%.505 =l add %.505, 8
+	storel 50, %.505
+	call $rt.abort(:type.205 %object.503)
+@passed.497
+	%load.511 =l loadl %binding.469
+	%.510 =w ceql %load.511, 0
+	jnz %.510, @true.507, @false.508
+@true.507
+	%load.514 =l loadl %param.464
+	%field.515 =l add %load.514, 8
+	%load.516 =l loadl %field.515
+	storel %load.516, %binding.469
+@.512
+	jmp @.509
+@false.508
+	%load.519 =l loadl %binding.469
+	%load.519 =l mul %load.519, 2
+	storel %load.519, %binding.469
+@.517
+@.509
+@.494
+@after.488
+	jmp @loop.485
+@.487
+	%load.520 =l loadl %param.464
+	%field.521 =l add %load.520, 16
+	%load.522 =l loadl %binding.469
+	storel %load.522, %field.521
+	# gen lowered cast
+	%load.525 =l loadl %param.464
+	%field.526 =l add %load.525, 0
+	%load.527 =l loadl %field.526
+	%load.529 =l loadl %param.464
+	%field.530 =l add %load.529, 16
+	%load.531 =l loadl %field.530
+	%load.532 =l loadl %param.465
+	%.528 =l mul %load.531, %load.532
+	%returns.524 =l call $rt.realloc(l %load.527, l %.528)
+	storel %returns.524, %binding.523
+	%load.539 =l loadl %binding.523
+	# gen lowered cast
+	%cast.540 =l copy 0
+	%.538 =w cnel %load.539, %cast.540
+	%.535 =w copy %.538
+	jnz %.535, @.537, @.536
+@.536
+	%load.543 =l loadl %param.464
+	%field.544 =l add %load.543, 16
+	%load.545 =l loadl %field.544
+	%load.546 =l loadl %param.465
+	%.542 =l mul %load.545, %load.546
+	%.541 =w ceql %.542, 0
+	%.535 =w copy %.541
+	jmp @.537
+@.537
+	jnz %.535, @passed.534, @failed.533
+@failed.533
+	%.549 =l copy %object.547
+	storel $strdata.548, %.549
+	%.549 =l add %.549, 8
+	storel 35, %.549
+	%.549 =l add %.549, 8
+	storel 35, %.549
+	call $rt.abort(:type.210 %object.547)
+@passed.534
+	%load.550 =l loadl %param.464
+	%field.551 =l add %load.550, 0
+	# gen lowered cast
+	%load.552 =l loadl %binding.523
+	storel %load.552, %field.551
+@.467
+	ret
+}
+
+section ".data.strdata.604" "a"
+data $strdata.604 = { b "Assertion failed: rt/ensure.ha:34:1" }
+
+section ".text.rt.unensure" "ax" export
+function $rt.unensure(l %s, l %membsz) {
+@start.553
+	%param.554 =l alloc8 8
+	%param.555 =l alloc8 8
+	%binding.559 =l alloc8 8
+	%binding.579 =l alloc8 8
+	%object.603 =l alloc8 24
+	storel %s, %param.554
+	storel %membsz, %param.555
+@body.556
+	%load.560 =l loadl %param.554
+	%field.561 =l add %load.560, 16
+	%load.562 =l loadl %field.561
+	storel %load.562, %binding.559
+@loop.563
+	%load.568 =l loadl %binding.559
+	%load.569 =l loadl %param.554
+	%field.570 =l add %load.569, 8
+	%load.571 =l loadl %field.570
+	%.567 =w cugtl %load.568, %load.571
+	jnz %.567, @body.564, @.565
+@body.564
+	%load.574 =l loadl %binding.559
+	%load.574 =l udiv %load.574, 2
+	storel %load.574, %binding.559
+@.572
+@after.566
+	jmp @loop.563
+@.565
+	%load.575 =l loadl %binding.559
+	%load.575 =l mul %load.575, 2
+	storel %load.575, %binding.559
+	%load.576 =l loadl %param.554
+	%field.577 =l add %load.576, 16
+	%load.578 =l loadl %binding.559
+	storel %load.578, %field.577
+	# gen lowered cast
+	%load.581 =l loadl %param.554
+	%field.582 =l add %load.581, 0
+	%load.583 =l loadl %field.582
+	%load.585 =l loadl %param.554
+	%field.586 =l add %load.585, 16
+	%load.587 =l loadl %field.586
+	%load.588 =l loadl %param.555
+	%.584 =l mul %load.587, %load.588
+	%returns.580 =l call $rt.realloc(l %load.583, l %.584)
+	storel %returns.580, %binding.579
+	%load.595 =l loadl %binding.579
+	# gen lowered cast
+	%cast.596 =l copy 0
+	%.594 =w cnel %load.595, %cast.596
+	%.591 =w copy %.594
+	jnz %.591, @.593, @.592
+@.592
+	%load.599 =l loadl %param.554
+	%field.600 =l add %load.599, 16
+	%load.601 =l loadl %field.600
+	%load.602 =l loadl %param.555
+	%.598 =l mul %load.601, %load.602
+	%.597 =w ceql %.598, 0
+	%.591 =w copy %.597
+	jmp @.593
+@.593
+	jnz %.591, @passed.590, @failed.589
+@failed.589
+	%.605 =l copy %object.603
+	storel $strdata.604, %.605
+	%.605 =l add %.605, 8
+	storel 35, %.605
+	%.605 =l add %.605, 8
+	storel 35, %.605
+	call $rt.abort(:type.210 %object.603)
+@passed.590
+	%load.606 =l loadl %param.554
+	%field.607 =l add %load.606, 0
+	# gen lowered cast
+	%load.608 =l loadl %binding.579
+	storel %load.608, %field.607
+@.557
+	ret
+}
+
+section ".bss.rt.bins" "ax"
+data $rt.bins = { l 0, l 0, l 0, l 0, l 0, l 0, l 0, l 0, l 0, l 0, l 0, l 0, l 0, l 0, l 0, l 0, l 0, l 0, l 0, l 0, l 0, l 0, l 0, l 0, l 0, l 0, l 0, l 0, l 0, l 0, l 0, l 0, l 0, l 0, l 0, l 0, l 0, l 0, l 0, l 0, l 0, l 0, l 0, l 0, l 0, l 0, l 0, l 0, l 0, l 0 }
+
+section ".text.rt.bin2size" "ax"
+function l $rt.bin2size(l %b) {
+@start.609
+	%param.610 =l alloc8 8
+	storel %b, %param.610
+@body.611
+	%load.616 =l loadl %param.610
+	%.615 =l add %load.616, 1
+	%.614 =l mul %.615, 2
+	%.613 =l sub %.614, 1
+	%.612 =l mul %.613, 8
+	ret %.612
+}
+
+section ".data.strdata.629" "a"
+data $strdata.629 = { b "rt/malloc.ha:43:15: Size exceeds maximum for bin" }
+
+section ".text.rt.size2bin" "ax"
+function l $rt.size2bin(l %s) {
+@start.617
+	%param.618 =l alloc8 8
+	%object.628 =l alloc8 24
+	storel %s, %param.618
+@body.619
+	%load.625 =l loadl %param.618
+	%.627 =l sub 50, 1
+	%returns.626 =l call $rt.bin2size(l %.627)
+	%.624 =w culel %load.625, %returns.626
+	jnz %.624, @passed.623, @failed.622
+@failed.622
+	%.630 =l copy %object.628
+	storel $strdata.629, %.630
+	%.630 =l add %.630, 8
+	storel 48, %.630
+	%.630 =l add %.630, 8
+	storel 48, %.630
+	call $rt.abort(:type.205 %object.628)
+@passed.623
+	%load.633 =l loadl %param.618
+	%.636 =l sub 2, 1
+	%.635 =l mul 8, %.636
+	%.634 =l sub %.635, 1
+	%.632 =l add %load.633, %.634
+	%.637 =l mul 8, 2
+	%.631 =l udiv %.632, %.637
+	ret %.631
+@.620
+	ret
+}
+
+section ".bss.rt.nalloc" "ax"
+data $rt.nalloc = { w 0 }
+
+section ".bss.rt.nfree" "ax"
+data $rt.nfree = { w 0 }
+
+section ".data.strdata.647" "a"
+data $strdata.647 = { b "Assertion failed: rt/malloc.ha:50:3" }
+
+section ".text.finifunc.638" "ax"
+function $finifunc.638() {
+@start.639
+	%object.646 =l alloc8 24
+@body.640
+	%load.644 =w loadsw $rt.nalloc
+	%load.645 =w loadsw $rt.nfree
+	%.643 =w ceqw %load.644, %load.645
+	jnz %.643, @passed.642, @failed.641
+@failed.641
+	%.648 =l copy %object.646
+	storel $strdata.647, %.648
+	%.648 =l add %.648, 8
+	storel 35, %.648
+	%.648 =l add %.648, 8
+	storel 35, %.648
+	call $rt.abort(:type.210 %object.646)
+@passed.642
+	ret
+}
+
+section ".fini_array" "ax"
+data $.fini.finifunc.638 = align 8 { l $finifunc.638 }
+
+section ".text.rt.malloc" "ax" export
+function l $rt.malloc(l %n) {
+@start.649
+	%param.650 =l alloc8 8
+	%binding.661 =l alloc8 8
+	storel %n, %param.650
+@body.651
+	%load.659 =l loadl %param.650
+	%.658 =w ceql %load.659, 0
+	jnz %.658, @true.655, @false.656
+@true.655
+	# gen lowered cast
+	%cast.660 =l copy 0
+	ret %cast.660
+@false.656
+@.657
+	%load.666 =l loadl %param.650
+	%.668 =l sub 50, 1
+	%returns.667 =l call $rt.bin2size(l %.668)
+	%.665 =w cugtl %load.666, %returns.667
+	jnz %.665, @true.662, @false.663
+@true.662
+	%load.670 =l loadl %param.650
+	%returns.669 =l call $rt.malloc_large(l %load.670)
+	storel %returns.669, %binding.661
+	jmp @.664
+@false.663
+	%load.672 =l loadl %param.650
+	%returns.671 =l call $rt.malloc_small(l %load.672)
+	storel %returns.671, %binding.661
+@.664
+	%load.673 =w loadsw $rt.nalloc
+	%load.673 =w add %load.673, 1
+	storew %load.673, $rt.nalloc
+	%load.674 =l loadl %binding.661
+	ret %load.674
+@.652
+	ret
+}
+
+# [1]size [id: 3493306397; size: 8]
+type :type.702 = align 8 { l 1 }
+
+section ".data.strdata.709" "a"
+data $strdata.709 = { b "rt/malloc.ha:68:1" }
+
+section ".text.rt.malloc_large" "ax"
+function l $rt.malloc_large(l %n) {
+@start.675
+	%param.676 =l alloc8 8
+	%binding.680 =l alloc8 8
+	%binding.695 =l alloc8 8
+	%object.708 =l alloc8 24
+	storel %n, %param.676
+@body.677
+	%load.684 =l loadl %param.676
+	%.683 =l add %load.684, 8
+	%.682 =l add %.683, 8
+	%returns.681 =l call $rt.segmalloc(l %.682)
+	storel %returns.681, %binding.680
+	%load.690 =l loadl %binding.680
+	# gen lowered cast
+	%cast.691 =l copy 0
+	%.689 =w ceql %load.690, %cast.691
+	jnz %.689, @true.686, @false.687
+@true.686
+	# gen lowered cast
+	%cast.694 =l copy 0
+	ret %cast.694
+@.692
+@false.687
+@.688
+	%load.697 =l loadl %binding.680
+	%cast.698 =l copy %load.697
+	%cast.699 =l copy 8
+	%.696 =l add %cast.698, %cast.699
+	%cast.700 =l copy %.696
+	storel %cast.700, %binding.695
+	%load.701 =l loadl %binding.695
+	# gen lowered cast
+	%cast.704 =l extsw 0
+	%.703 =l mul %cast.704, 8
+	%.703 =l add %load.701, %.703
+	%.705 =w cultl %cast.704, 1
+	jnz %.705, @.707, @.706
+@.706
+	%.710 =l copy %object.708
+	storel $strdata.709, %.710
+	%.710 =l add %.710, 8
+	storel 17, %.710
+	%.710 =l add %.710, 8
+	storel 17, %.710
+	call $rt.abort_fixed(:type.210 %object.708, l 0)
+@.707
+	%load.711 =l loadl %param.676
+	storel %load.711, %.703
+	%load.714 =l loadl %binding.680
+	%cast.715 =l copy %load.714
+	%cast.716 =l copy 8
+	%.713 =l add %cast.715, %cast.716
+	%cast.717 =l copy 8
+	%.712 =l add %.713, %cast.717
+	%cast.718 =l copy %.712
+	ret %cast.718
+@.678
+	ret
+}
+
+# [50]nullable *void [id: 2987628831; size: 400]
+type :type.728 = align 8 { l 50 }
+
+section ".data.strdata.735" "a"
+data $strdata.735 = { b "rt/malloc.ha:74:2" }
+
+section ".data.strdata.764" "a"
+data $strdata.764 = { b "rt/malloc.ha:78:2" }
+
+section ".data.strdata.785" "a"
+data $strdata.785 = { b "rt/malloc.ha:83:2" }
+
+section ".text.rt.malloc_small" "ax"
+function l $rt.malloc_small(l %n) {
+@start.719
+	%param.720 =l alloc8 8
+	%binding.724 =l alloc8 8
+	%binding.727 =l alloc8 8
+	%object.734 =l alloc8 24
+	%object.763 =l alloc8 24
+	%binding.776 =l alloc8 8
+	%object.784 =l alloc8 24
+	storel %n, %param.720
+@body.721
+	# gen lowered cast
+	%load.726 =l loadl %param.720
+	%returns.725 =l call $rt.size2bin(l %load.726)
+	storel %returns.725, %binding.724
+	# gen lowered cast
+	%load.730 =l loadl %binding.724
+	%.729 =l mul %load.730, 8
+	%.729 =l add $rt.bins, %.729
+	%.731 =w cultl %load.730, 50
+	jnz %.731, @.733, @.732
+@.732
+	%.736 =l copy %object.734
+	storel $strdata.735, %.736
+	%.736 =l add %.736, 8
+	storel 17, %.736
+	%.736 =l add %.736, 8
+	storel 17, %.736
+	call $rt.abort_fixed(:type.210 %object.734, l 0)
+@.733
+	%load.737 =l loadl %.729
+	storel %load.737, %binding.727
+	%load.743 =l loadl %binding.727
+	# gen lowered cast
+	%cast.744 =l copy 0
+	%.742 =w ceql %load.743, %cast.744
+	jnz %.742, @true.739, @false.740
+@true.739
+	# gen lowered cast
+	%load.748 =l loadl %binding.724
+	%returns.747 =l call $rt.fill_bin(l %load.748)
+	storel %returns.747, %binding.727
+	%load.754 =l loadl %binding.727
+	# gen lowered cast
+	%cast.755 =l copy 0
+	%.753 =w cnel %load.754, %cast.755
+	jnz %.753, @true.750, @false.751
+@true.750
+	# gen lowered cast
+	%load.759 =l loadl %binding.724
+	%.758 =l mul %load.759, 8
+	%.758 =l add $rt.bins, %.758
+	%.760 =w cultl %load.759, 50
+	jnz %.760, @.762, @.761
+@.761
+	%.765 =l copy %object.763
+	storel $strdata.764, %.765
+	%.765 =l add %.765, 8
+	storel 17, %.765
+	%.765 =l add %.765, 8
+	storel 17, %.765
+	call $rt.abort_fixed(:type.210 %object.763, l 0)
+@.762
+	%load.766 =l loadl %binding.727
+	storel %load.766, %.758
+@.756
+	jmp @.752
+@false.751
+@.752
+@.745
+	jmp @.741
+@false.740
+@.741
+	%load.772 =l loadl %binding.727
+	# gen lowered cast
+	%cast.773 =l copy 0
+	%.771 =w cnel %load.772, %cast.773
+	jnz %.771, @true.768, @false.769
+@true.768
+	%load.777 =l loadl %binding.727
+	%load.778 =l loadl %load.777
+	storel %load.778, %binding.776
+	# gen lowered cast
+	%load.780 =l loadl %binding.724
+	%.779 =l mul %load.780, 8
+	%.779 =l add $rt.bins, %.779
+	%.781 =w cultl %load.780, 50
+	jnz %.781, @.783, @.782
+@.782
+	%.786 =l copy %object.784
+	storel $strdata.785, %.786
+	%.786 =l add %.786, 8
+	storel 17, %.786
+	%.786 =l add %.786, 8
+	storel 17, %.786
+	call $rt.abort_fixed(:type.210 %object.784, l 0)
+@.783
+	# gen lowered cast
+	%load.787 =l loadl %binding.776
+	storel %load.787, %.779
+	%load.788 =l loadl %binding.727
+	%.775 =l copy %load.788
+	jmp @.774
+@.774
+	%.767 =l copy %.775
+	jmp @.770
+@false.769
+	# gen lowered cast
+	%cast.789 =l copy 0
+	%.767 =l copy %cast.789
+@.770
+	ret %.767
+@.722
+	ret
+}
+
+section ".text.rt.fill_bin" "ax"
+function l $rt.fill_bin(l %b) {
+@start.790
+	%param.791 =l alloc8 8
+	%binding.795 =l alloc8 8
+	%binding.798 =l alloc8 8
+	storel %b, %param.791
+@body.792
+	# gen lowered cast
+	%load.797 =l loadl %param.791
+	%returns.796 =l call $rt.bin2size(l %load.797)
+	storel %returns.796, %binding.795
+	%returns.799 =l call $rt.segmalloc(l 1048576)
+	storel %returns.799, %binding.798
+	%load.805 =l loadl %binding.798
+	# gen lowered cast
+	%cast.806 =l copy 0
+	%.804 =w ceql %load.805, %cast.806
+	jnz %.804, @true.801, @false.802
+@true.801
+	# gen lowered cast
+	%cast.807 =l copy 0
+	%.800 =l copy %cast.807
+	jmp @.803
+@false.802
+	# gen lowered cast
+	%load.809 =l loadl %binding.795
+	%load.810 =l loadl %binding.798
+	%cast.811 =l copy %load.810
+	%returns.808 =l call $rt.list_from_block(l %load.809, l %cast.811)
+	%.800 =l copy %returns.808
+@.803
+	ret %.800
+@.793
+	ret
+}
+
+section ".data.strdata.872" "a"
+data $strdata.872 = { b "rt/malloc.ha:108:2" }
+
+section ".text.rt.list_from_block" "ax"
+function l $rt.list_from_block(l %s, l %p) {
+@start.812
+	%param.813 =l alloc8 8
+	%param.814 =l alloc8 8
+	%binding.818 =l alloc8 8
+	%binding.823 =l alloc8 8
+	%binding.831 =l alloc8 8
+	%binding.838 =l alloc8 8
+	%binding.841 =l alloc8 8
+	%binding.845 =l alloc8 8
+	%object.871 =l alloc8 24
+	storel %s, %param.813
+	storel %p, %param.814
+@body.815
+	# gen lowered cast
+	%.820 =l sub 1048576, 8
+	%load.822 =l loadl %param.813
+	%.821 =l add %load.822, 8
+	%.819 =l udiv %.820, %.821
+	storel %.819, %binding.818
+	%load.825 =l loadl %param.814
+	%cast.826 =l copy 8
+	%.824 =l add %load.825, %cast.826
+	storel %.824, %binding.823
+	storel 0, %binding.831
+@loop.827
+	# gen lowered cast
+	%load.833 =l loadl %binding.831
+	%load.835 =l loadl %binding.818
+	%.834 =l sub %load.835, 1
+	%.832 =w cnel %load.833, %.834
+	jnz %.832, @body.828, @.829
+@body.828
+	%load.839 =l loadl %binding.823
+	%cast.840 =l copy %load.839
+	storel %cast.840, %binding.838
+	%load.843 =l loadl %binding.823
+	%cast.844 =l copy 8
+	%.842 =l add %load.843, %cast.844
+	storel %.842, %binding.841
+	%load.848 =l loadl %binding.841
+	%load.849 =l loadl %param.813
+	%cast.850 =l copy %load.849
+	%.847 =l add %load.848, %cast.850
+	%cast.851 =l copy 8
+	%.846 =l add %.847, %cast.851
+	%cast.852 =l copy %.846
+	storel %cast.852, %binding.845
+	%load.853 =l loadl %binding.838
+	%load.854 =l loadl %param.813
+	storel %load.854, %load.853
+	%load.855 =l loadl %binding.841
+	%cast.856 =l copy %load.855
+	%load.857 =l loadl %binding.845
+	storel %load.857, %cast.856
+	%load.858 =l loadl %binding.823
+	%load.860 =l loadl %param.813
+	%cast.861 =l copy %load.860
+	%cast.862 =l copy 8
+	%.859 =l add %cast.861, %cast.862
+	%load.858 =l add %load.858, %.859
+	storel %load.858, %binding.823
+@.836
+@after.830
+	%load.863 =l loadl %binding.831
+	%load.863 =l add %load.863, 1
+	storel %load.863, %binding.831
+	jmp @loop.827
+@.829
+	%load.864 =l loadl %binding.823
+	%cast.865 =l copy %load.864
+	# gen lowered cast
+	%cast.867 =l extsw 0
+	%.866 =l mul %cast.867, 8
+	%.866 =l add %cast.865, %.866
+	%.868 =w cultl %cast.867, 1
+	jnz %.868, @.870, @.869
+@.869
+	%.873 =l copy %object.871
+	storel $strdata.872, %.873
+	%.873 =l add %.873, 8
+	storel 18, %.873
+	%.873 =l add %.873, 8
+	storel 18, %.873
+	call $rt.abort_fixed(:type.210 %object.871, l 0)
+@.870
+	%load.874 =l loadl %param.813
+	storel %load.874, %.866
+	%load.876 =l loadl %binding.823
+	%.875 =l add %load.876, 1
+	%cast.877 =l copy %.875
+	# gen lowered cast
+	%cast.878 =l copy 0
+	storel %cast.878, %cast.877
+	# gen lowered cast
+	%load.881 =l loadl %param.814
+	%cast.882 =l copy 8
+	%.880 =l add %load.881, %cast.882
+	%cast.883 =l copy 8
+	%.879 =l add %.880, %cast.883
+	%cast.884 =l copy %.879
+	ret %cast.884
+@.816
+	ret
+}
+
+section ".data.strdata.916" "a"
+data $strdata.916 = { b "rt/malloc.ha:121:3" }
+
+section ".text.rt.free" "ax" export
+function $rt.free(l %_p) {
+@start.885
+	%param.886 =l alloc8 8
+	%binding.900 =l alloc8 8
+	%binding.902 =l alloc8 8
+	%binding.908 =l alloc8 8
+	%object.915 =l alloc8 24
+	storel %_p, %param.886
+@body.887
+	%load.895 =l loadl %param.886
+	# gen lowered cast
+	%cast.896 =l copy 0
+	%.894 =w cnel %load.895, %cast.896
+	jnz %.894, @true.891, @false.892
+@true.891
+	%load.899 =w loadsw $rt.nfree
+	%load.899 =w add %load.899, 1
+	storew %load.899, $rt.nfree
+	%load.901 =l loadl %param.886
+	storel %load.901, %binding.900
+	%load.904 =l loadl %binding.900
+	%cast.905 =l copy %load.904
+	%cast.906 =l copy 8
+	%.903 =l sub %cast.905, %cast.906
+	%cast.907 =l copy %.903
+	storel %cast.907, %binding.902
+	%load.909 =l loadl %binding.902
+	# gen lowered cast
+	%cast.911 =l extsw 0
+	%.910 =l mul %cast.911, 8
+	%.910 =l add %load.909, %.910
+	%.912 =w cultl %cast.911, 1
+	jnz %.912, @.914, @.913
+@.913
+	%.917 =l copy %object.915
+	storel $strdata.916, %.917
+	%.917 =l add %.917, 8
+	storel 18, %.917
+	%.917 =l add %.917, 8
+	storel 18, %.917
+	call $rt.abort_fixed(:type.210 %object.915, l 0)
+@.914
+	%load.918 =l loadl %.910
+	storel %load.918, %binding.908
+	%load.924 =l loadl %binding.908
+	%.926 =l sub 50, 1
+	%returns.925 =l call $rt.bin2size(l %.926)
+	%.923 =w culel %load.924, %returns.925
+	jnz %.923, @true.920, @false.921
+@true.920
+	%load.927 =l loadl %binding.900
+	%load.928 =l loadl %binding.908
+	call $rt.free_small(l %load.927, l %load.928)
+	jmp @.922
+@false.921
+	%load.929 =l loadl %binding.900
+	%load.930 =l loadl %binding.908
+	call $rt.free_large(l %load.929, l %load.930)
+@.922
+@.897
+	jmp @.893
+@false.892
+@.893
+@.888
+	ret
+}
+
+section ".data.strdata.956" "a"
+data $strdata.956 = { b "rt/malloc.ha:130:15: free: munmap failed" }
+
+section ".text.rt.free_large" "ax"
+function $rt.free_large(l %_p, l %s) {
+@start.931
+	%param.932 =l alloc8 8
+	%param.933 =l alloc8 8
+	%binding.937 =l alloc8 8
+	%binding.945 =l alloc4 4
+	%object.955 =l alloc8 24
+	storel %_p, %param.932
+	storel %s, %param.933
+@body.934
+	%load.939 =l loadl %param.932
+	%cast.940 =l copy %load.939
+	%cast.942 =l copy 8
+	%cast.943 =l copy 8
+	%.941 =l add %cast.942, %cast.943
+	%.938 =l sub %cast.940, %.941
+	%cast.944 =l copy %.938
+	storel %cast.944, %binding.937
+	%load.947 =l loadl %binding.937
+	%load.950 =l loadl %param.933
+	%.949 =l add %load.950, 8
+	%.948 =l add %.949, 8
+	%returns.946 =w call $rt.segfree(l %load.947, l %.948)
+	storew %returns.946, %binding.945
+	%load.954 =w loadsw %binding.945
+	%.953 =w ceqw %load.954, 0
+	jnz %.953, @passed.952, @failed.951
+@failed.951
+	%.957 =l copy %object.955
+	storel $strdata.956, %.957
+	%.957 =l add %.957, 8
+	storel 40, %.957
+	%.957 =l add %.957, 8
+	storel 40, %.957
+	call $rt.abort(:type.205 %object.955)
+@passed.952
+@.935
+	ret
+}
+
+section ".data.strdata.974" "a"
+data $strdata.974 = { b "rt/malloc.ha:135:2" }
+
+section ".data.strdata.985" "a"
+data $strdata.985 = { b "rt/malloc.ha:137:1" }
+
+section ".text.rt.free_small" "ax"
+function $rt.free_small(l %p, l %s) {
+@start.958
+	%param.959 =l alloc8 8
+	%param.960 =l alloc8 8
+	%binding.964 =l alloc8 8
+	%binding.967 =l alloc8 8
+	%object.973 =l alloc8 24
+	%object.984 =l alloc8 24
+	storel %p, %param.959
+	storel %s, %param.960
+@body.961
+	%load.966 =l loadl %param.960
+	%returns.965 =l call $rt.size2bin(l %load.966)
+	storel %returns.965, %binding.964
+	%load.969 =l loadl %binding.964
+	%.968 =l mul %load.969, 8
+	%.968 =l add $rt.bins, %.968
+	%.970 =w cultl %load.969, 50
+	jnz %.970, @.972, @.971
+@.971
+	%.975 =l copy %object.973
+	storel $strdata.974, %.975
+	%.975 =l add %.975, 8
+	storel 18, %.975
+	%.975 =l add %.975, 8
+	storel 18, %.975
+	call $rt.abort_fixed(:type.210 %object.973, l 0)
+@.972
+	%load.976 =l loadl %.968
+	storel %load.976, %binding.967
+	%load.977 =l loadl %param.959
+	%load.978 =l loadl %binding.967
+	storel %load.978, %load.977
+	%load.980 =l loadl %binding.964
+	%.979 =l mul %load.980, 8
+	%.979 =l add $rt.bins, %.979
+	%.981 =w cultl %load.980, 50
+	jnz %.981, @.983, @.982
+@.982
+	%.986 =l copy %object.984
+	storel $strdata.985, %.986
+	%.986 =l add %.986, 8
+	storel 18, %.986
+	%.986 =l add %.986, 8
+	storel 18, %.986
+	call $rt.abort_fixed(:type.210 %object.984, l 0)
+@.983
+	# gen lowered cast
+	%load.987 =l loadl %param.959
+	storel %load.987, %.979
+@.962
+	ret
+}
+
+section ".text.rt.realloc" "ax" export
+function l $rt.realloc(l %_p, l %n) {
+@start.988
+	%param.989 =l alloc8 8
+	%param.990 =l alloc8 8
+	%binding.1015 =l alloc8 8
+	%binding.1017 =l alloc8 8
+	%binding.1023 =l alloc8 8
+	%binding.1055 =l alloc8 8
+	storel %_p, %param.989
+	storel %n, %param.990
+@body.991
+	%load.999 =l loadl %param.990
+	%.998 =w ceql %load.999, 0
+	jnz %.998, @true.995, @false.996
+@true.995
+	%load.1002 =l loadl %param.989
+	call $rt.free(l %load.1002)
+	# gen lowered cast
+	%cast.1003 =l copy 0
+	ret %cast.1003
+@.1000
+@false.996
+	%load.1009 =l loadl %param.989
+	# gen lowered cast
+	%cast.1010 =l copy 0
+	%.1008 =w ceql %load.1009, %cast.1010
+	jnz %.1008, @true.1005, @false.1006
+@true.1005
+	%load.1014 =l loadl %param.990
+	%returns.1013 =l call $rt.malloc(l %load.1014)
+	ret %returns.1013
+@.1011
+@false.1006
+@.1007
+@.997
+	%load.1016 =l loadl %param.989
+	storel %load.1016, %binding.1015
+	%load.1019 =l loadl %binding.1015
+	%cast.1020 =l copy %load.1019
+	%cast.1021 =l copy 8
+	%.1018 =l sub %cast.1020, %cast.1021
+	%cast.1022 =l copy %.1018
+	storel %cast.1022, %binding.1017
+	%load.1024 =l loadl %binding.1017
+	%load.1025 =l loadl %load.1024
+	storel %load.1025, %binding.1023
+	%load.1031 =l loadl %binding.1023
+	%load.1032 =l loadl %param.990
+	%.1030 =w cugel %load.1031, %load.1032
+	jnz %.1030, @true.1027, @false.1028
+@true.1027
+	# gen lowered cast
+	%load.1035 =l loadl %binding.1015
+	ret %load.1035
+@.1033
+@false.1028
+@.1029
+	%load.1044 =l loadl %param.990
+	%.1046 =l sub 50, 1
+	%returns.1045 =l call $rt.bin2size(l %.1046)
+	%.1043 =w cultl %load.1044, %returns.1045
+	%.1040 =w copy %.1043
+	jnz %.1040, @.1041, @.1042
+@.1041
+	%load.1049 =l loadl %param.990
+	%returns.1048 =l call $rt.size2bin(l %load.1049)
+	%load.1051 =l loadl %binding.1023
+	%returns.1050 =l call $rt.size2bin(l %load.1051)
+	%.1047 =w ceql %returns.1048, %returns.1050
+	%.1040 =w copy %.1047
+	jmp @.1042
+@.1042
+	jnz %.1040, @true.1037, @false.1038
+@true.1037
+	# gen lowered cast
+	%load.1054 =l loadl %binding.1015
+	ret %load.1054
+@.1052
+@false.1038
+@.1039
+	%load.1057 =l loadl %param.990
+	%returns.1056 =l call $rt.malloc(l %load.1057)
+	storel %returns.1056, %binding.1055
+	%load.1063 =l loadl %binding.1055
+	# gen lowered cast
+	%cast.1064 =l copy 0
+	%.1062 =w cnel %load.1063, %cast.1064
+	jnz %.1062, @true.1059, @false.1060
+@true.1059
+	%load.1067 =l loadl %binding.1055
+	%load.1068 =l loadl %binding.1015
+	%load.1069 =l loadl %binding.1023
+	call $rt.memcpy(l %load.1067, l %load.1068, l %load.1069)
+	%load.1070 =l loadl %binding.1015
+	call $rt.free(l %load.1070)
+@.1065
+	jmp @.1061
+@false.1060
+@.1061
+	%load.1071 =l loadl %binding.1055
+	ret %load.1071
+@.992
+	ret
+}
+
+section ".text.rt.memcpy" "ax" export
+function $rt.memcpy(l %dest, l %src, l %amt) {
+@start.1072
+	%param.1073 =l alloc8 8
+	%param.1074 =l alloc8 8
+	%param.1075 =l alloc8 8
+	%binding.1079 =l alloc8 8
+	%binding.1081 =l alloc8 8
+	%binding.1087 =l alloc8 8
+	storel %dest, %param.1073
+	storel %src, %param.1074
+	storel %amt, %param.1075
+@body.1076
+	%load.1080 =l loadl %param.1073
+	storel %load.1080, %binding.1079
+	%load.1082 =l loadl %param.1074
+	storel %load.1082, %binding.1081
+	storel 0, %binding.1087
+@loop.1083
+	%load.1089 =l loadl %binding.1087
+	%load.1090 =l loadl %param.1075
+	%.1088 =w cultl %load.1089, %load.1090
+	jnz %.1088, @body.1084, @.1085
+@body.1084
+	%load.1093 =l loadl %binding.1079
+	%load.1096 =l loadl %binding.1087
+	%.1095 =l mul %load.1096, 1
+	%.1095 =l add %load.1093, %.1095
+	%load.1097 =l loadl %binding.1081
+	%load.1100 =l loadl %binding.1087
+	%.1099 =l mul %load.1100, 1
+	%.1099 =l add %load.1097, %.1099
+	%load.1101 =w loadub %.1099
+	storeb %load.1101, %.1095
+@.1091
+@after.1086
+	%load.1102 =l loadl %binding.1087
+	%load.1102 =l add %load.1102, 1
+	storel %load.1102, %binding.1087
+	jmp @loop.1083
+@.1085
+@.1077
+	ret
+}
+
+section ".text.rt.memmove" "ax" export
+function $rt.memmove(l %dest, l %src, l %n) {
+@start.1103
+	%param.1104 =l alloc8 8
+	%param.1105 =l alloc8 8
+	%param.1106 =l alloc8 8
+	%binding.1110 =l alloc8 8
+	%binding.1112 =l alloc8 8
+	%binding.1140 =l alloc8 8
+	%binding.1162 =l alloc8 8
+	storel %dest, %param.1104
+	storel %src, %param.1105
+	storel %n, %param.1106
+@body.1107
+	%load.1111 =l loadl %param.1104
+	storel %load.1111, %binding.1110
+	%load.1113 =l loadl %param.1105
+	storel %load.1113, %binding.1112
+	%load.1119 =l loadl %binding.1110
+	%cast.1120 =l copy %load.1119
+	%load.1121 =l loadl %binding.1112
+	%cast.1122 =l copy %load.1121
+	%.1118 =w ceql %cast.1120, %cast.1122
+	jnz %.1118, @true.1115, @false.1116
+@true.1115
+	ret
+@.1123
+@false.1116
+@.1117
+	%load.1130 =l loadl %binding.1110
+	%cast.1131 =l copy %load.1130
+	%load.1132 =l loadl %binding.1112
+	%cast.1133 =l copy %load.1132
+	%.1129 =w cultl %cast.1131, %cast.1133
+	jnz %.1129, @true.1126, @false.1127
+@true.1126
+	storel 0, %binding.1140
+@loop.1136
+	%load.1142 =l loadl %binding.1140
+	%load.1143 =l loadl %param.1106
+	%.1141 =w cultl %load.1142, %load.1143
+	jnz %.1141, @body.1137, @.1138
+@body.1137
+	%load.1146 =l loadl %binding.1110
+	%load.1149 =l loadl %binding.1140
+	%.1148 =l mul %load.1149, 1
+	%.1148 =l add %load.1146, %.1148
+	%load.1150 =l loadl %binding.1112
+	%load.1153 =l loadl %binding.1140
+	%.1152 =l mul %load.1153, 1
+	%.1152 =l add %load.1150, %.1152
+	%load.1154 =w loadub %.1152
+	storeb %load.1154, %.1148
+@.1144
+@after.1139
+	%load.1155 =l loadl %binding.1140
+	%load.1155 =l add %load.1155, 1
+	storel %load.1155, %binding.1140
+	jmp @loop.1136
+@.1138
+@.1134
+	jmp @.1128
+@false.1127
+	storel 0, %binding.1162
+@loop.1158
+	%load.1164 =l loadl %binding.1162
+	%load.1165 =l loadl %param.1106
+	%.1163 =w cultl %load.1164, %load.1165
+	jnz %.1163, @body.1159, @.1160
+@body.1159
+	%load.1168 =l loadl %binding.1110
+	%load.1173 =l loadl %param.1106
+	%load.1174 =l loadl %binding.1162
+	%.1172 =l sub %load.1173, %load.1174
+	%.1171 =l sub %.1172, 1
+	%.1170 =l mul %.1171, 1
+	%.1170 =l add %load.1168, %.1170
+	%load.1175 =l loadl %binding.1112
+	%load.1180 =l loadl %param.1106
+	%load.1181 =l loadl %binding.1162
+	%.1179 =l sub %load.1180, %load.1181
+	%.1178 =l sub %.1179, 1
+	%.1177 =l mul %.1178, 1
+	%.1177 =l add %load.1175, %.1177
+	%load.1182 =w loadub %.1177
+	storeb %load.1182, %.1170
+@.1166
+@after.1161
+	%load.1183 =l loadl %binding.1162
+	%load.1183 =l add %load.1183, 1
+	storel %load.1183, %binding.1162
+	jmp @loop.1158
+@.1160
+@.1156
+@.1128
+@.1108
+	ret
+}
+
+section ".text.rt.memset" "ax" export
+function $rt.memset(l %dest, w %val, l %amt) {
+@start.1184
+	%param.1185 =l alloc8 8
+	%param.1186 =l alloc4 1
+	%param.1187 =l alloc8 8
+	%binding.1191 =l alloc8 8
+	%binding.1197 =l alloc8 8
+	storel %dest, %param.1185
+	storeb %val, %param.1186
+	storel %amt, %param.1187
+@body.1188
+	%load.1192 =l loadl %param.1185
+	storel %load.1192, %binding.1191
+	storel 0, %binding.1197
+@loop.1193
+	%load.1199 =l loadl %binding.1197
+	%load.1200 =l loadl %param.1187
+	%.1198 =w cultl %load.1199, %load.1200
+	jnz %.1198, @body.1194, @.1195
+@body.1194
+	%load.1203 =l loadl %binding.1191
+	%load.1206 =l loadl %binding.1197
+	%.1205 =l mul %load.1206, 1
+	%.1205 =l add %load.1203, %.1205
+	%load.1207 =w loadub %param.1186
+	storeb %load.1207, %.1205
+@.1201
+@after.1196
+	%load.1208 =l loadl %binding.1197
+	%load.1208 =l add %load.1208, 1
+	storel %load.1208, %binding.1197
+	jmp @loop.1193
+@.1195
+@.1189
+	ret
+}
+
+section ".text.rt.start_ha" "ax" export
+function $rt.start_ha(l %iv) {
+@start.1209
+	%binding.1214 =l alloc8 8
+	%binding.1224 =l alloc8 8
+	%binding.1235 =l alloc8 8
+	%binding.1245 =l alloc8 8
+@body.1211
+	# gen lowered cast
+	%cast.1217 =l copy $__init_array_end
+	%cast.1218 =l copy $__init_array_start
+	%.1216 =l sub %cast.1217, %cast.1218
+	%cast.1219 =l copy %.1216
+	%.1215 =l udiv %cast.1219, 8
+	storel %.1215, %binding.1214
+	storel 0, %binding.1224
+@loop.1220
+	# gen lowered cast
+	%load.1226 =l loadl %binding.1224
+	%load.1227 =l loadl %binding.1214
+	%.1225 =w cultl %load.1226, %load.1227
+	jnz %.1225, @body.1221, @.1222
+@body.1221
+	%load.1232 =l loadl %binding.1224
+	%.1231 =l mul %load.1232, 8
+	%.1231 =l add $__init_array_start, %.1231
+	%load.1233 =l loadl %.1231
+	call %load.1233()
+@.1228
+@after.1223
+	%load.1234 =l loadl %binding.1224
+	%load.1234 =l add %load.1234, 1
+	storel %load.1234, %binding.1224
+	jmp @loop.1220
+@.1222
+	call $main()
+	# gen lowered cast
+	%cast.1238 =l copy $__fini_array_end
+	%cast.1239 =l copy $__fini_array_start
+	%.1237 =l sub %cast.1238, %cast.1239
+	%cast.1240 =l copy %.1237
+	%.1236 =l udiv %cast.1240, 8
+	storel %.1236, %binding.1235
+	storel 0, %binding.1245
+@loop.1241
+	# gen lowered cast
+	%load.1247 =l loadl %binding.1245
+	%load.1248 =l loadl %binding.1235
+	%.1246 =w cultl %load.1247, %load.1248
+	jnz %.1246, @body.1242, @.1243
+@body.1242
+	%load.1253 =l loadl %binding.1245
+	%.1252 =l mul %load.1253, 8
+	%.1252 =l add $__fini_array_start, %.1252
+	%load.1254 =l loadl %.1252
+	call %load.1254()
+@.1249
+@after.1244
+	%load.1255 =l loadl %binding.1245
+	%load.1255 =l add %load.1255, 1
+	storel %load.1255, %binding.1245
+	jmp @loop.1241
+@.1243
+	call $rt.exit(w 0)
+@.1212
+	ret
+}
+
+section ".text.rt.strcmp" "ax" export
+function w $rt.strcmp(:type.205 %_a, :type.205 %_b) {
+@start.1256
+	%binding.1269 =l alloc8 8
+	%binding.1272 =l alloc8 8
+	%binding.1275 =l alloc8 8
+	%binding.1277 =l alloc8 8
+	%binding.1283 =l alloc8 8
+@body.1257
+	%.1265 =l add %_a, 8
+	%.1265 =l loadl %.1265
+	%.1266 =l add %_b, 8
+	%.1266 =l loadl %.1266
+	%.1264 =w cnel %.1265, %.1266
+	jnz %.1264, @true.1261, @false.1262
+@true.1261
+	ret 0
+@.1267
+@false.1262
+@.1263
+	%field.1270 =l add %_a, 0
+	%load.1271 =l loadl %field.1270
+	storel %load.1271, %binding.1269
+	%field.1273 =l add %_b, 0
+	%load.1274 =l loadl %field.1273
+	storel %load.1274, %binding.1272
+	%load.1276 =l loadl %binding.1269
+	storel %load.1276, %binding.1275
+	%load.1278 =l loadl %binding.1272
+	storel %load.1278, %binding.1277
+	storel 0, %binding.1283
+@loop.1279
+	%load.1285 =l loadl %binding.1283
+	%.1286 =l add %_a, 8
+	%.1286 =l loadl %.1286
+	%.1284 =w cultl %load.1285, %.1286
+	jnz %.1284, @body.1280, @.1281
+@body.1280
+	%load.1294 =l loadl %binding.1275
+	%load.1297 =l loadl %binding.1283
+	%.1296 =l mul %load.1297, 1
+	%.1296 =l add %load.1294, %.1296
+	%load.1298 =w loadub %.1296
+	%load.1299 =l loadl %binding.1277
+	%load.1302 =l loadl %binding.1283
+	%.1301 =l mul %load.1302, 1
+	%.1301 =l add %load.1299, %.1301
+	%load.1303 =w loadub %.1301
+	%ext.1304 =w extub %load.1298
+	%ext.1305 =w extub %load.1303
+	%.1293 =w cnew %ext.1304, %ext.1305
+	jnz %.1293, @true.1290, @false.1291
+@true.1290
+	ret 0
+@.1306
+@false.1291
+@.1292
+@.1287
+@after.1282
+	%load.1308 =l loadl %binding.1283
+	%load.1308 =l add %load.1308, 1
+	storel %load.1308, %binding.1283
+	jmp @loop.1279
+@.1281
+	ret 1
+@.1258
+	ret
+}
+
