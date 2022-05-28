@@ -14,8 +14,8 @@ libhart.a: harec $(libhart_srcs) $(libhart_objs) $(rtstart)
 	@printf 'HAREC\t$@\n'
 	@mkdir -p $(HARECACHE)/rt
 	@./harec -Nrt -t$(HARECACHE)/rt/rt.td -o $@.ssa $(libhart_srcs)
-	@$(QBE) -o $@.s $@.ssa
-	@arch -x86_64 $(AS) -g -o $@.o $@.s # It is currently necessary, because QBE outputs x64 assembly only. But wait! according to harelang.org, aarch64 (== arm64) is supported! yeah IDK how.
+	$(QBE) $(QBE_FLAGS) -t arm64 -Gm -o $@.s $@.ssa	# TODO: Remove arm64-specific tags and make /config.sh work
+	@$(AS) -g -o $@.o $@.s
 	@$(AR) -csr $@ $@.o $(libhart_objs)
 	@rm $@.o $@.s $@.ssa
 

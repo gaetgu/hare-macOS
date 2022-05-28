@@ -1,0 +1,163 @@
+# const str [id: 2826993630; size: 24]
+type :type.15 = align 8 { l 3 }
+
+section ".data.strdata.16" "a"
+data $strdata.16 = { b "Assertion failed: tests/33-yield.ha:9:2" }
+
+section ".data.strdata.23" "a"
+data $strdata.23 = { b "Assertion failed: tests/33-yield.ha:11:1" }
+
+section ".data.strdata.30" "a"
+data $strdata.30 = { b "Assertion failed: tests/33-yield.ha:12:1" }
+
+section ".text.basics" "ax"
+function $basics() {
+@start.0
+	%binding.4 =l alloc4 4
+	%binding.6 =l alloc4 4
+	%object.14 =l alloc8 24
+	%object.22 =l alloc8 24
+	%object.29 =l alloc8 24
+@body.1
+	storew 10, %binding.4
+	jmp @.5
+@.5
+	jnz 1, @true.9, @false.10
+@true.9
+	storew 20, %binding.6
+	jmp @.7
+@.12
+	jmp @.11
+@false.10
+@.11
+	%.17 =l copy %object.14
+	storel $strdata.16, %.17
+	%.17 =l add %.17, 8
+	storel 39, %.17
+	%.17 =l add %.17, 8
+	storel 39, %.17
+	call $rt.abort(:type.15 %object.14)
+@.7
+	%load.21 =w loadsw %binding.4
+	%.20 =w ceqw %load.21, 10
+	jnz %.20, @passed.19, @failed.18
+@failed.18
+	%.24 =l copy %object.22
+	storel $strdata.23, %.24
+	%.24 =l add %.24, 8
+	storel 40, %.24
+	%.24 =l add %.24, 8
+	storel 40, %.24
+	call $rt.abort(:type.15 %object.22)
+@passed.19
+	%load.28 =w loadsw %binding.6
+	%.27 =w ceqw %load.28, 20
+	jnz %.27, @passed.26, @failed.25
+@failed.25
+	%.31 =l copy %object.29
+	storel $strdata.30, %.31
+	%.31 =l add %.31, 8
+	storel 40, %.31
+	%.31 =l add %.31, 8
+	storel 40, %.31
+	call $rt.abort(:type.15 %object.29)
+@passed.26
+@.2
+	ret
+}
+
+section ".data.strdata.45" "a"
+data $strdata.45 = { b "Assertion failed: tests/33-yield.ha:20:2" }
+
+section ".text.termination" "ax"
+function $termination() {
+@start.32
+	%object.44 =l alloc8 24
+@body.33
+	jnz 1, @true.39, @false.40
+@true.39
+	jmp @.36
+@.42
+	jmp @.41
+@false.40
+@.41
+	%.46 =l copy %object.44
+	storel $strdata.45, %.46
+	%.46 =l add %.46, 8
+	storel 40, %.46
+	%.46 =l add %.46, 8
+	storel 40, %.46
+	call $rt.abort(:type.15 %object.44)
+@.36
+@.34
+	ret
+}
+
+type :tags.53 = { { w 1 } }
+
+# (int | void) [id: 2945140412; size: 8]
+type :type.52 = align 4 { w 1, :tags.53 1 }
+
+section ".data.strdata.68" "a"
+data $strdata.68 = { b "tests/33-yield.ha:28:2" }
+
+section ".data.strdata.72" "a"
+data $strdata.72 = { b "Assertion failed: tests/33-yield.ha:28:1" }
+
+section ".text.cast_lowering" "ax"
+function $cast_lowering() {
+@start.47
+	%binding.51 =l alloc4 8
+	%object.67 =l alloc8 24
+	%object.71 =l alloc8 24
+@body.48
+	# gen lowered cast
+	storew 1099590421, %binding.51
+	%.54 =l add %binding.51, 4
+	storew 10, %.54
+	jmp @.55
+@.55
+	%.59 =l copy %binding.51
+	%.60 =w loaduw %binding.51
+	%subval.63 =l copy %binding.51
+	%.64 =w ceqw %.60, 1099590421
+	jnz %.64, @subtype.66, @failed.62
+@subtype.66
+	jmp @passed.61
+@failed.62
+	%.69 =l copy %object.67
+	storel $strdata.68, %.69
+	%.69 =l add %.69, 8
+	storel 22, %.69
+	%.69 =l add %.69, 8
+	storel 22, %.69
+	call $rt.abort_fixed(:type.15 %object.67, l 1)
+@passed.61
+	%.59 =l add %.59, 4
+	%load.70 =w loadsw %.59
+	%.58 =w ceqw %load.70, 10
+	jnz %.58, @passed.57, @failed.56
+@failed.56
+	%.73 =l copy %object.71
+	storel $strdata.72, %.73
+	%.73 =l add %.73, 8
+	storel 40, %.73
+	%.73 =l add %.73, 8
+	storel 40, %.73
+	call $rt.abort(:type.15 %object.71)
+@passed.57
+@.49
+	ret
+}
+
+section ".text.main" "ax" export
+function $main() {
+@start.74
+@body.75
+	call $basics()
+	call $termination()
+	call $cast_lowering()
+@.76
+	ret
+}
+

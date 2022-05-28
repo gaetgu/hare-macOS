@@ -1,264 +1,313 @@
 .section ".text.rt.segmalloc", "ax"
 _rt.segmalloc:
-	pushq %rbp
-	movq %rsp, %rbp
-	movq %rdi, %rsi
-	movl $0, %r9d
-	movl $-1, %r8d
-	movl $4098, %ecx
-	movl $3, %edx
-	movl $0, %edi
-	callq _rt.mmap
-	cmpl $-12, %eax
-	jnz Lbb3
-	movl $0, %eax
-Lbb3:
-	leave
+	stp	x29, x30, [sp, -16]!
+	mov	x29, sp
+	mov	x1, x0
+	mov	x5, #0
+	mov	w4, #-1
+	mov	w3, #4098
+	mov	w2, #3
+	mov	x0, #0
+	adrp	x6, rt.mmap
+	add	x6, x6, #:lo12:rt.mmap
+	blr	x6
+	cmn	w0, #12
+	bne	.L3
+	mov	x0, #0
+.L3:
+	ldp	x29, x30, [sp], 16
 	ret
 /* end function rt.segmalloc */
 
 .section ".text.rt.segfree", "ax"
 _rt.segfree:
-	pushq %rbp
-	movq %rsp, %rbp
-	callq _rt.munmap
-	leave
+	stp	x29, x30, [sp, -16]!
+	mov	x29, sp
+	adrp	x2, rt.munmap
+	add	x2, x2, #:lo12:rt.munmap
+	blr	x2
+	ldp	x29, x30, [sp], 16
 	ret
 /* end function rt.segfree */
 
 .section ".text.rt.write", "ax"
 .globl _rt.write
 _rt.write:
-	pushq %rbp
-	movq %rsp, %rbp
-	movq %rdx, %rcx
-	movq %rsi, %rdx
-	movslq %edi, %rsi
-	movl $4, %edi
-	callq _rt.syscall3
-	leave
+	stp	x29, x30, [sp, -16]!
+	mov	x29, sp
+	mov	x3, x2
+	mov	x2, x1
+	sxtw	x1, w0
+	mov	x0, #4
+	adrp	x4, rt.syscall3
+	add	x4, x4, #:lo12:rt.syscall3
+	blr	x4
+	ldp	x29, x30, [sp], 16
 	ret
 /* end function rt.write */
 
 .section ".text.rt.close", "ax"
 .globl _rt.close
 _rt.close:
-	pushq %rbp
-	movq %rsp, %rbp
-	movslq %edi, %rsi
-	movl $6, %edi
-	callq _rt.syscall1
-	leave
+	stp	x29, x30, [sp, -16]!
+	mov	x29, sp
+	sxtw	x1, w0
+	mov	x0, #6
+	adrp	x2, rt.syscall1
+	add	x2, x2, #:lo12:rt.syscall1
+	blr	x2
+	ldp	x29, x30, [sp], 16
 	ret
 /* end function rt.close */
 
 .section ".text.rt.dup2", "ax"
 .globl _rt.dup2
 _rt.dup2:
-	pushq %rbp
-	movq %rsp, %rbp
-	movl %esi, %eax
-	movslq %edi, %rsi
-	movslq %eax, %rdx
-	movl $90, %edi
-	callq _rt.syscall2
-	leave
+	stp	x29, x30, [sp, -16]!
+	mov	x29, sp
+	mov	w18, w1
+	mov	w1, w0
+	mov	w0, w18
+	sxtw	x1, w1
+	sxtw	x2, w0
+	mov	x0, #90
+	adrp	x3, rt.syscall2
+	add	x3, x3, #:lo12:rt.syscall2
+	blr	x3
+	ldp	x29, x30, [sp], 16
 	ret
 /* end function rt.dup2 */
 
 .section ".text.rt.getpid", "ax"
 .globl _rt.getpid
 _rt.getpid:
-	pushq %rbp
-	movq %rsp, %rbp
-	movl $20, %edi
-	callq _rt.syscall0
-	leave
+	stp	x29, x30, [sp, -16]!
+	mov	x29, sp
+	mov	x0, #20
+	adrp	x1, rt.syscall0
+	add	x1, x1, #:lo12:rt.syscall0
+	blr	x1
+	ldp	x29, x30, [sp], 16
 	ret
 /* end function rt.getpid */
 
 .section ".text.rt.exit", "ax"
 .globl _rt.exit
 _rt.exit:
-	pushq %rbp
-	movq %rsp, %rbp
-	movslq %edi, %rsi
-	movl $1, %edi
-	callq _rt.syscall1
-	leave
+	stp	x29, x30, [sp, -16]!
+	mov	x29, sp
+	sxtw	x1, w0
+	mov	x0, #1
+	adrp	x2, rt.syscall1
+	add	x2, x2, #:lo12:rt.syscall1
+	blr	x2
+	ldp	x29, x30, [sp], 16
 	ret
 /* end function rt.exit */
 
 .section ".text.rt.fork", "ax"
 .globl _rt.fork
 _rt.fork:
-	pushq %rbp
-	movq %rsp, %rbp
-	movl $2, %edi
-	callq _rt.syscall0
-	leave
+	stp	x29, x30, [sp, -16]!
+	mov	x29, sp
+	mov	x0, #2
+	adrp	x1, rt.syscall0
+	add	x1, x1, #:lo12:rt.syscall0
+	blr	x1
+	ldp	x29, x30, [sp], 16
 	ret
 /* end function rt.fork */
 
 .section ".text.rt.execve", "ax"
 .globl _rt.execve
 _rt.execve:
-	pushq %rbp
-	movq %rsp, %rbp
-	movq %rdx, %rcx
-	movq %rsi, %rdx
-	movq %rdi, %rsi
-	movl $59, %edi
-	callq _rt.syscall3
-	leave
+	stp	x29, x30, [sp, -16]!
+	mov	x29, sp
+	mov	x3, x2
+	mov	x2, x1
+	mov	x1, x0
+	mov	x0, #59
+	adrp	x4, rt.syscall3
+	add	x4, x4, #:lo12:rt.syscall3
+	blr	x4
+	ldp	x29, x30, [sp], 16
 	ret
 /* end function rt.execve */
 
 .section ".text.rt.wait4", "ax"
 .globl _rt.wait4
 _rt.wait4:
-	pushq %rbp
-	movq %rsp, %rbp
-	movq %rcx, %r8
-	movl %edx, %eax
-	movq %rsi, %rdx
-	movslq %edi, %rsi
-	movslq %eax, %rcx
-	movl $7, %edi
-	callq _rt.syscall4
-	leave
+	stp	x29, x30, [sp, -16]!
+	mov	x29, sp
+	mov	x4, x3
+	mov	x18, x2
+	mov	x2, x0
+	mov	x0, x18
+	mov	x18, x1
+	mov	x1, x2
+	mov	x2, x18
+	sxtw	x1, w1
+	sxtw	x3, w0
+	mov	x0, #7
+	adrp	x5, rt.syscall4
+	add	x5, x5, #:lo12:rt.syscall4
+	blr	x5
+	ldp	x29, x30, [sp], 16
 	ret
 /* end function rt.wait4 */
 
 .section ".text.rt.wifexited", "ax"
 .globl _rt.wifexited
 _rt.wifexited:
-	pushq %rbp
-	movq %rsp, %rbp
-	callq _rt.wtermsig
-	cmpl $0, %eax
-	setz %al
-	movzbl %al, %eax
-	leave
+	stp	x29, x30, [sp, -16]!
+	mov	x29, sp
+	adrp	x1, rt.wtermsig
+	add	x1, x1, #:lo12:rt.wtermsig
+	blr	x1
+	cmp	w0, #0
+	cset	w0, eq
+	ldp	x29, x30, [sp], 16
 	ret
 /* end function rt.wifexited */
 
 .section ".text.rt.wexitstatus", "ax"
 .globl _rt.wexitstatus
 _rt.wexitstatus:
-	pushq %rbp
-	movq %rsp, %rbp
-	movl %edi, %eax
-	andl $65280, %eax
-	sarl $8, %eax
-	leave
+	stp	x29, x30, [sp, -16]!
+	mov	x29, sp
+	mov	w1, #65280
+	and	w0, w0, w1
+	mov	w1, #8
+	asr	w0, w0, w1
+	ldp	x29, x30, [sp], 16
 	ret
 /* end function rt.wexitstatus */
 
 .section ".text.rt.wtermsig", "ax"
 .globl _rt.wtermsig
 _rt.wtermsig:
-	pushq %rbp
-	movq %rsp, %rbp
-	movl %edi, %eax
-	andl $127, %eax
-	leave
+	stp	x29, x30, [sp, -16]!
+	mov	x29, sp
+	mov	w1, #127
+	and	w0, w0, w1
+	ldp	x29, x30, [sp], 16
 	ret
 /* end function rt.wtermsig */
 
 .section ".text.rt.wifsignaled", "ax"
 .globl _rt.wifsignaled
 _rt.wifsignaled:
-	pushq %rbp
-	movq %rsp, %rbp
-	subq $8, %rsp
-	pushq %rbx
-	movl %edi, %ebx
-	callq _rt.wtermsig
-	movl %ebx, %edi
-	cmpl $127, %eax
-	setnz %al
-	movzbl %al, %eax
-	jz Lbb43
-	movl %edi, %ebx
-	callq _rt.wtermsig
-	movl %ebx, %edi
-	cmpl $0, %eax
-	setnz %al
-	movzbl %al, %eax
-Lbb43:
-	cmpl $0, %eax
-	jz Lbb45
-	cmpl $19, %edi
-	setnz %al
-	movzbl %al, %eax
-Lbb45:
-	popq %rbx
-	leave
+	stp	x29, x30, [sp, -32]!
+	mov	x29, sp
+	str	x19, [x29, 24]
+	mov	w19, w0
+	adrp	x1, rt.wtermsig
+	add	x1, x1, #:lo12:rt.wtermsig
+	blr	x1
+	mov	w1, w0
+	mov	w0, w19
+	cmp	w1, #127
+	cset	w1, ne
+	cmp	w1, #0
+	beq	.L43
+	mov	w19, w0
+	adrp	x1, rt.wtermsig
+	add	x1, x1, #:lo12:rt.wtermsig
+	blr	x1
+	mov	w1, w0
+	mov	w0, w19
+	cmp	w1, #0
+	cset	w1, ne
+.L43:
+	cmp	w1, #0
+	bne	.L45
+	mov	w0, w1
+	b	.L46
+.L45:
+	cmp	w0, #19
+	cset	w0, ne
+.L46:
+	ldr	x19, [x29, 24]
+	ldp	x29, x30, [sp], 32
 	ret
 /* end function rt.wifsignaled */
 
 .section ".text.rt.kill", "ax"
 .globl _rt.kill
 _rt.kill:
-	pushq %rbp
-	movq %rsp, %rbp
-	movl %esi, %eax
-	movslq %edi, %rsi
-	movslq %eax, %rdx
-	movl $37, %edi
-	callq _rt.syscall2
-	leave
+	stp	x29, x30, [sp, -16]!
+	mov	x29, sp
+	mov	w18, w1
+	mov	w1, w0
+	mov	w0, w18
+	sxtw	x1, w1
+	sxtw	x2, w0
+	mov	x0, #37
+	adrp	x3, rt.syscall2
+	add	x3, x3, #:lo12:rt.syscall2
+	blr	x3
+	ldp	x29, x30, [sp], 16
 	ret
 /* end function rt.kill */
 
 .section ".text.rt.pipe2", "ax"
 .globl _rt.pipe2
 _rt.pipe2:
-	pushq %rbp
-	movq %rsp, %rbp
-	movl %esi, %eax
-	movq %rdi, %rsi
-	movslq %eax, %rdx
-	movl $542, %edi
-	callq _rt.syscall2
-	leave
+	stp	x29, x30, [sp, -16]!
+	mov	x29, sp
+	mov	x18, x1
+	mov	x1, x0
+	mov	x0, x18
+	sxtw	x2, w0
+	mov	x0, #542
+	adrp	x3, rt.syscall2
+	add	x3, x3, #:lo12:rt.syscall2
+	blr	x3
+	ldp	x29, x30, [sp], 16
 	ret
 /* end function rt.pipe2 */
 
 .section ".text.rt.mmap", "ax"
 .globl _rt.mmap
 _rt.mmap:
-	pushq %rbp
-	movq %rsp, %rbp
-	movq %r9, %rax
-	xchgq %r8, %rdi
-	xchgq %rcx, %r8
-	xchgq %rdx, %rcx
-	xchgq %rsi, %rdx
-	movl %ecx, %ecx
-	movl %r8d, %r8d
-	movslq %edi, %r9
-	subq $16, %rsp
-	movq %rsp, %rdi
-	movq %rax, 0(%rdi)
-	movl $477, %edi
-	callq _rt.syscall6
-	subq $-16, %rsp
-	leave
+	stp	x29, x30, [sp, -16]!
+	mov	x29, sp
+	mov	x6, x5
+	mov	x18, x4
+	mov	x4, x0
+	mov	x0, x18
+	mov	x18, x3
+	mov	x3, x4
+	mov	x4, x18
+	mov	x18, x2
+	mov	x2, x3
+	mov	x3, x18
+	mov	x18, x1
+	mov	x1, x2
+	mov	x2, x18
+	mov	w3, w3
+	mov	w4, w4
+	sxtw	x5, w0
+	mov	x0, #477
+	adrp	x7, rt.syscall6
+	add	x7, x7, #:lo12:rt.syscall6
+	blr	x7
+	ldp	x29, x30, [sp], 16
 	ret
 /* end function rt.mmap */
 
 .section ".text.rt.munmap", "ax"
 .globl _rt.munmap
 _rt.munmap:
-	pushq %rbp
-	movq %rsp, %rbp
-	movq %rsi, %rdx
-	movq %rdi, %rsi
-	movl $73, %edi
-	callq _rt.syscall2
-	leave
+	stp	x29, x30, [sp, -16]!
+	mov	x29, sp
+	mov	x2, x1
+	mov	x1, x0
+	mov	x0, #73
+	adrp	x3, rt.syscall2
+	add	x3, x3, #:lo12:rt.syscall2
+	blr	x3
+	ldp	x29, x30, [sp], 16
 	ret
 /* end function rt.munmap */
 
@@ -277,68 +326,167 @@ _strdata.226:
 .section ".text.rt.abort", "ax"
 .globl _rt.abort
 _rt.abort:
-	pushq %rbp
-	movq %rsp, %rbp
-	subq $80, %rsp
-	leaq _strdata.212(%rip), %rax
-	movq %rax, -48(%rbp)
-	movq $7, -40(%rbp)
-	movq $7, -32(%rbp)
-	leaq _strdata.212(%rip), %rax
-	movq %rax, -72(%rbp)
-	movq $7, -64(%rbp)
-	movq $7, -56(%rbp)
-	subq $32, %rsp
-	movq %rsp, %rcx
-	movq -56(%rbp), %rax
-	movq %rax, 16(%rcx)
-	movq -64(%rbp), %rax
-	movq %rax, 8(%rcx)
-	movq -72(%rbp), %rax
-	movq %rax, 0(%rcx)
-	callq _rt.constchar
-	movq %rax, %rsi
-	subq $-32, %rsp
-	movq -64(%rbp), %rdx
-	movl $2, %edi
-	callq _rt.write
-	subq $32, %rsp
-	movq %rsp, %rcx
-	movq 32(%rbp), %rax
-	movq %rax, 16(%rcx)
-	movq 24(%rbp), %rax
-	movq %rax, 8(%rcx)
-	movq 16(%rbp), %rax
-	movq %rax, 0(%rcx)
-	callq _rt.constchar
-	movq %rax, %rsi
-	subq $-32, %rsp
-	movq 24(%rbp), %rdx
-	movl $2, %edi
-	callq _rt.write
-	leaq _strdata.226(%rip), %rax
-	movq %rax, -24(%rbp)
-	movq $1, -16(%rbp)
-	movq $1, -8(%rbp)
-	subq $32, %rsp
-	movq %rsp, %rcx
-	movq -8(%rbp), %rax
-	movq %rax, 16(%rcx)
-	movq -16(%rbp), %rax
-	movq %rax, 8(%rcx)
-	movq -24(%rbp), %rax
-	movq %rax, 0(%rcx)
-	callq _rt.constchar
-	movq %rax, %rsi
-	subq $-32, %rsp
-	movl $1, %edx
-	movl $2, %edi
-	callq _rt.write
-	callq _rt.getpid
-	movl %eax, %edi
-	movl $6, %esi
-	callq _rt.kill
-	leave
+	stp	x29, x30, [sp, -176]!
+	mov	x29, sp
+	str	x19, [x29, 168]
+	add	x2, x29, #112
+	adrp	x1, strdata.212
+	add	x1, x1, #:lo12:strdata.212
+	str	x1, [x2]
+	mov	x2, #8
+	add	x1, x29, #112
+	add	x1, x1, x2
+	mov	x2, #7
+	str	x2, [x1]
+	mov	x2, #8
+	add	x2, x1, x2
+	mov	x1, #7
+	str	x1, [x2]
+	add	x2, x29, #88
+	adrp	x1, strdata.212
+	add	x1, x1, #:lo12:strdata.212
+	str	x1, [x2]
+	mov	x2, #8
+	add	x1, x29, #88
+	add	x1, x1, x2
+	mov	x2, #7
+	str	x2, [x1]
+	mov	x2, #8
+	add	x2, x1, x2
+	mov	x1, #7
+	str	x1, [x2]
+	mov	x2, #16
+	add	x1, x29, #88
+	add	x1, x1, x2
+	ldr	x1, [x1]
+	mov	x3, #16
+	add	x2, x29, #64
+	add	x2, x2, x3
+	str	x1, [x2]
+	mov	x2, #8
+	add	x1, x29, #88
+	add	x1, x1, x2
+	ldr	x1, [x1]
+	mov	x3, #8
+	add	x2, x29, #64
+	add	x2, x2, x3
+	str	x1, [x2]
+	mov	x2, #0
+	add	x1, x29, #88
+	add	x1, x1, x2
+	ldr	x1, [x1]
+	mov	x3, #0
+	add	x2, x29, #64
+	add	x2, x2, x3
+	str	x1, [x2]
+	mov	x19, x0
+	add	x0, x29, #64
+	adrp	x1, rt.constchar
+	add	x1, x1, #:lo12:rt.constchar
+	blr	x1
+	mov	x1, x0
+	mov	x0, x19
+	mov	x3, #8
+	add	x2, x29, #88
+	add	x2, x2, x3
+	ldr	x2, [x2]
+	mov	x19, x0
+	mov	w0, #2
+	adrp	x3, rt.write
+	add	x3, x3, #:lo12:rt.write
+	blr	x3
+	mov	x0, x19
+	mov	x1, #16
+	add	x1, x0, x1
+	ldr	x1, [x1]
+	mov	x3, #16
+	add	x2, x29, #40
+	add	x2, x2, x3
+	str	x1, [x2]
+	mov	x1, #8
+	add	x1, x0, x1
+	ldr	x1, [x1]
+	mov	x3, #8
+	add	x2, x29, #40
+	add	x2, x2, x3
+	str	x1, [x2]
+	mov	x1, #0
+	add	x1, x0, x1
+	ldr	x1, [x1]
+	mov	x3, #0
+	add	x2, x29, #40
+	add	x2, x2, x3
+	str	x1, [x2]
+	mov	x19, x0
+	add	x0, x29, #40
+	adrp	x1, rt.constchar
+	add	x1, x1, #:lo12:rt.constchar
+	blr	x1
+	mov	x1, x0
+	mov	x0, x19
+	mov	x2, #8
+	add	x0, x0, x2
+	ldr	x2, [x0]
+	mov	w0, #2
+	adrp	x3, rt.write
+	add	x3, x3, #:lo12:rt.write
+	blr	x3
+	add	x1, x29, #136
+	adrp	x0, strdata.226
+	add	x0, x0, #:lo12:strdata.226
+	str	x0, [x1]
+	mov	x1, #8
+	add	x0, x29, #136
+	add	x0, x0, x1
+	mov	x1, #1
+	str	x1, [x0]
+	mov	x1, #8
+	add	x1, x0, x1
+	mov	x0, #1
+	str	x0, [x1]
+	mov	x1, #16
+	add	x0, x29, #136
+	add	x0, x0, x1
+	ldr	x0, [x0]
+	mov	x2, #16
+	add	x1, x29, #16
+	add	x1, x1, x2
+	str	x0, [x1]
+	mov	x1, #8
+	add	x0, x29, #136
+	add	x0, x0, x1
+	ldr	x0, [x0]
+	mov	x2, #8
+	add	x1, x29, #16
+	add	x1, x1, x2
+	str	x0, [x1]
+	mov	x1, #0
+	add	x0, x29, #136
+	add	x0, x0, x1
+	ldr	x0, [x0]
+	mov	x2, #0
+	add	x1, x29, #16
+	add	x1, x1, x2
+	str	x0, [x1]
+	add	x0, x29, #16
+	adrp	x1, rt.constchar
+	add	x1, x1, #:lo12:rt.constchar
+	blr	x1
+	mov	x1, x0
+	mov	x2, #1
+	mov	w0, #2
+	adrp	x3, rt.write
+	add	x3, x3, #:lo12:rt.write
+	blr	x3
+	adrp	x0, rt.getpid
+	add	x0, x0, #:lo12:rt.getpid
+	blr	x0
+	mov	w1, #6
+	adrp	x2, rt.kill
+	add	x2, x2, #:lo12:rt.kill
+	blr	x2
+	ldr	x19, [x29, 168]
+	ldp	x29, x30, [sp], 176
 	ret
 /* end function rt.abort */
 
@@ -425,180 +573,379 @@ _strdata.288:
 .section ".text.rt.abort_fixed", "ax"
 .globl _rt.abort_fixed
 _rt.abort_fixed:
-	pushq %rbp
-	movq %rsp, %rbp
-	subq $176, %rsp
-	pushq %rbx
-	pushq %r12
-	movl %edi, %ebx
-	leaq _strdata.242(%rip), %rax
-	movq %rax, -144(%rbp)
-	movq $7, -136(%rbp)
-	movq $7, -128(%rbp)
-	leaq _strdata.242(%rip), %rax
-	movq %rax, -168(%rbp)
-	movq $7, -160(%rbp)
-	movq $7, -152(%rbp)
-	leaq _strdata.249(%rip), %rax
-	movq %rax, -96(%rbp)
-	movq $2, -88(%rbp)
-	movq $2, -80(%rbp)
-	leaq _strdata.249(%rip), %rax
-	movq %rax, -120(%rbp)
-	movq $2, -112(%rbp)
-	movq $2, -104(%rbp)
-	subq $32, %rsp
-	movq %rsp, %rcx
-	movq -152(%rbp), %rax
-	movq %rax, 16(%rcx)
-	movq -160(%rbp), %rax
-	movq %rax, 8(%rcx)
-	movq -168(%rbp), %rax
-	movq %rax, 0(%rcx)
-	callq _rt.constchar
-	movl %ebx, %edi
-	movq %rax, %rsi
-	subq $-32, %rsp
-	movq -160(%rbp), %rdx
-	movl %edi, %ebx
-	movl $2, %edi
-	callq _rt.write
-	subq $32, %rsp
-	movq %rsp, %rcx
-	movq 32(%rbp), %rax
-	movq %rax, 16(%rcx)
-	movq 24(%rbp), %rax
-	movq %rax, 8(%rcx)
-	movq 16(%rbp), %rax
-	movq %rax, 0(%rcx)
-	callq _rt.constchar
-	movl %ebx, %edi
-	movq %rax, %rsi
-	subq $-32, %rsp
-	movq 24(%rbp), %rdx
-	movl %edi, %ebx
-	movl $2, %edi
-	callq _rt.write
-	subq $32, %rsp
-	movq %rsp, %rcx
-	movq -104(%rbp), %rax
-	movq %rax, 16(%rcx)
-	movq -112(%rbp), %rax
-	movq %rax, 8(%rcx)
-	movq -120(%rbp), %rax
-	movq %rax, 0(%rcx)
-	callq _rt.constchar
-	movl %ebx, %edi
-	movq %rax, %rsi
-	subq $-32, %rsp
-	movq -112(%rbp), %rdx
-	movl %edi, %ebx
-	movl $2, %edi
-	callq _rt.write
-	movl %ebx, %edi
-	movslq %edi, %rax
-	imulq $24, %rax, %rdx
-	leaq _rt.reasons(%rip), %rcx
-	movq %rcx, %r12
-	addq %rdx, %r12
-	cmpq $5, %rax
-	jb Lbb64
-	leaq _strdata.273(%rip), %rax
-	movq %rax, -72(%rbp)
-	movq $16, -64(%rbp)
-	movq $16, -56(%rbp)
-	subq $32, %rsp
-	movq %rsp, %rcx
-	movq -56(%rbp), %rax
-	movq %rax, 16(%rcx)
-	movq -64(%rbp), %rax
-	movq %rax, 8(%rcx)
-	movq -72(%rbp), %rax
-	movq %rax, 0(%rcx)
-	movl %edi, %ebx
-	movl $0, %edi
-	callq _rt.abort_fixed
-	subq $-32, %rsp
-	jmp Lbb65
-Lbb64:
-	movl %edi, %ebx
-Lbb65:
-	subq $32, %rsp
-	movq %rsp, %rcx
-	movq 16(%r12), %rax
-	movq %rax, 16(%rcx)
-	movq 8(%r12), %rax
-	movq %rax, 8(%rcx)
-	movq 0(%r12), %rax
-	movq %rax, 0(%rcx)
-	callq _rt.constchar
-	movl %ebx, %edi
-	movq %rax, %r12
-	subq $-32, %rsp
-	movslq %edi, %rax
-	imulq $24, %rax, %rdx
-	leaq _rt.reasons(%rip), %rcx
-	movq %rcx, %rbx
-	addq %rdx, %rbx
-	cmpq $5, %rax
-	jb Lbb67
-	leaq _strdata.282(%rip), %rax
-	movq %rax, -48(%rbp)
-	movq $16, -40(%rbp)
-	movq $16, -32(%rbp)
-	subq $32, %rsp
-	movq %rsp, %rcx
-	movq -32(%rbp), %rax
-	movq %rax, 16(%rcx)
-	movq -40(%rbp), %rax
-	movq %rax, 8(%rcx)
-	movq -48(%rbp), %rax
-	movq %rax, 0(%rcx)
-	movl $0, %edi
-	callq _rt.abort_fixed
-	movq %r12, %rsi
-	subq $-32, %rsp
-	jmp Lbb68
-Lbb67:
-	movq %r12, %rsi
-Lbb68:
-	movq 8(%rbx), %rdx
-	movl $2, %edi
-	callq _rt.write
-	leaq _strdata.288(%rip), %rax
-	movq %rax, -24(%rbp)
-	movq $1, -16(%rbp)
-	movq $1, -8(%rbp)
-	subq $32, %rsp
-	movq %rsp, %rcx
-	movq -8(%rbp), %rax
-	movq %rax, 16(%rcx)
-	movq -16(%rbp), %rax
-	movq %rax, 8(%rcx)
-	movq -24(%rbp), %rax
-	movq %rax, 0(%rcx)
-	callq _rt.constchar
-	movq %rax, %rsi
-	subq $-32, %rsp
-	movl $1, %edx
-	movl $2, %edi
-	callq _rt.write
-	callq _rt.getpid
-	movl %eax, %edi
-	movl $6, %esi
-	callq _rt.kill
-	popq %r12
-	popq %rbx
-	leave
+	stp	x29, x30, [sp, -368]!
+	mov	x29, sp
+	str	x19, [x29, 360]
+	str	x20, [x29, 352]
+	mov	w19, w1
+	add	x2, x29, #208
+	adrp	x1, strdata.242
+	add	x1, x1, #:lo12:strdata.242
+	str	x1, [x2]
+	mov	x2, #8
+	add	x1, x29, #208
+	add	x1, x1, x2
+	mov	x2, #7
+	str	x2, [x1]
+	mov	x2, #8
+	add	x2, x1, x2
+	mov	x1, #7
+	str	x1, [x2]
+	add	x2, x29, #184
+	adrp	x1, strdata.242
+	add	x1, x1, #:lo12:strdata.242
+	str	x1, [x2]
+	mov	x2, #8
+	add	x1, x29, #184
+	add	x1, x1, x2
+	mov	x2, #7
+	str	x2, [x1]
+	mov	x2, #8
+	add	x2, x1, x2
+	mov	x1, #7
+	str	x1, [x2]
+	add	x2, x29, #256
+	adrp	x1, strdata.249
+	add	x1, x1, #:lo12:strdata.249
+	str	x1, [x2]
+	mov	x2, #8
+	add	x1, x29, #256
+	add	x1, x1, x2
+	mov	x2, #2
+	str	x2, [x1]
+	mov	x2, #8
+	add	x2, x1, x2
+	mov	x1, #2
+	str	x1, [x2]
+	add	x2, x29, #232
+	adrp	x1, strdata.249
+	add	x1, x1, #:lo12:strdata.249
+	str	x1, [x2]
+	mov	x2, #8
+	add	x1, x29, #232
+	add	x1, x1, x2
+	mov	x2, #2
+	str	x2, [x1]
+	mov	x2, #8
+	add	x2, x1, x2
+	mov	x1, #2
+	str	x1, [x2]
+	mov	x2, #16
+	add	x1, x29, #184
+	add	x1, x1, x2
+	ldr	x1, [x1]
+	mov	x3, #16
+	add	x2, x29, #64
+	add	x2, x2, x3
+	str	x1, [x2]
+	mov	x2, #8
+	add	x1, x29, #184
+	add	x1, x1, x2
+	ldr	x1, [x1]
+	mov	x3, #8
+	add	x2, x29, #64
+	add	x2, x2, x3
+	str	x1, [x2]
+	mov	x2, #0
+	add	x1, x29, #184
+	add	x1, x1, x2
+	ldr	x1, [x1]
+	mov	x3, #0
+	add	x2, x29, #64
+	add	x2, x2, x3
+	str	x1, [x2]
+	mov	x20, x0
+	add	x0, x29, #64
+	adrp	x1, rt.constchar
+	add	x1, x1, #:lo12:rt.constchar
+	blr	x1
+	mov	x1, x0
+	mov	x0, x20
+	mov	x3, #8
+	add	x2, x29, #184
+	add	x2, x2, x3
+	ldr	x2, [x2]
+	mov	x20, x0
+	mov	w0, #2
+	adrp	x3, rt.write
+	add	x3, x3, #:lo12:rt.write
+	blr	x3
+	mov	x0, x20
+	mov	x1, #16
+	add	x1, x0, x1
+	ldr	x1, [x1]
+	mov	x3, #16
+	add	x2, x29, #40
+	add	x2, x2, x3
+	str	x1, [x2]
+	mov	x1, #8
+	add	x1, x0, x1
+	ldr	x1, [x1]
+	mov	x3, #8
+	add	x2, x29, #40
+	add	x2, x2, x3
+	str	x1, [x2]
+	mov	x1, #0
+	add	x1, x0, x1
+	ldr	x1, [x1]
+	mov	x3, #0
+	add	x2, x29, #40
+	add	x2, x2, x3
+	str	x1, [x2]
+	mov	x20, x0
+	add	x0, x29, #40
+	adrp	x1, rt.constchar
+	add	x1, x1, #:lo12:rt.constchar
+	blr	x1
+	mov	x1, x0
+	mov	x0, x20
+	mov	x2, #8
+	add	x0, x0, x2
+	ldr	x2, [x0]
+	mov	w0, #2
+	adrp	x3, rt.write
+	add	x3, x3, #:lo12:rt.write
+	blr	x3
+	mov	x1, #16
+	add	x0, x29, #232
+	add	x0, x0, x1
+	ldr	x0, [x0]
+	mov	x2, #16
+	add	x1, x29, #16
+	add	x1, x1, x2
+	str	x0, [x1]
+	mov	x1, #8
+	add	x0, x29, #232
+	add	x0, x0, x1
+	ldr	x0, [x0]
+	mov	x2, #8
+	add	x1, x29, #16
+	add	x1, x1, x2
+	str	x0, [x1]
+	mov	x1, #0
+	add	x0, x29, #232
+	add	x0, x0, x1
+	ldr	x0, [x0]
+	mov	x2, #0
+	add	x1, x29, #16
+	add	x1, x1, x2
+	str	x0, [x1]
+	add	x0, x29, #16
+	adrp	x1, rt.constchar
+	add	x1, x1, #:lo12:rt.constchar
+	blr	x1
+	mov	x1, x0
+	mov	x2, #8
+	add	x0, x29, #232
+	add	x0, x0, x2
+	ldr	x2, [x0]
+	mov	w0, #2
+	adrp	x3, rt.write
+	add	x3, x3, #:lo12:rt.write
+	blr	x3
+	sxtw	x0, w19
+	mov	x1, #24
+	mul	x2, x0, x1
+	adrp	x1, rt.reasons
+	add	x1, x1, #:lo12:rt.reasons
+	add	x20, x1, x2
+	cmp	x0, #5
+	bcc	.L65
+	add	x1, x29, #280
+	adrp	x0, strdata.273
+	add	x0, x0, #:lo12:strdata.273
+	str	x0, [x1]
+	mov	x1, #8
+	add	x0, x29, #280
+	add	x0, x0, x1
+	mov	x1, #16
+	str	x1, [x0]
+	mov	x1, #8
+	add	x1, x0, x1
+	mov	x0, #16
+	str	x0, [x1]
+	mov	x1, #16
+	add	x0, x29, #280
+	add	x0, x0, x1
+	ldr	x0, [x0]
+	mov	x2, #16
+	add	x1, x29, #88
+	add	x1, x1, x2
+	str	x0, [x1]
+	mov	x1, #8
+	add	x0, x29, #280
+	add	x0, x0, x1
+	ldr	x0, [x0]
+	mov	x2, #8
+	add	x1, x29, #88
+	add	x1, x1, x2
+	str	x0, [x1]
+	mov	x1, #0
+	add	x0, x29, #280
+	add	x0, x0, x1
+	ldr	x0, [x0]
+	mov	x2, #0
+	add	x1, x29, #88
+	add	x1, x1, x2
+	str	x0, [x1]
+	mov	x1, #0
+	add	x0, x29, #88
+	adrp	x2, rt.abort_fixed
+	add	x2, x2, #:lo12:rt.abort_fixed
+	blr	x2
+.L65:
+	mov	x0, #16
+	add	x0, x20, x0
+	ldr	x0, [x0]
+	mov	x2, #16
+	add	x1, x29, #112
+	add	x1, x1, x2
+	str	x0, [x1]
+	mov	x0, #8
+	add	x0, x20, x0
+	ldr	x0, [x0]
+	mov	x2, #8
+	add	x1, x29, #112
+	add	x1, x1, x2
+	str	x0, [x1]
+	mov	x0, #0
+	add	x0, x20, x0
+	ldr	x0, [x0]
+	mov	x2, #0
+	add	x1, x29, #112
+	add	x1, x1, x2
+	str	x0, [x1]
+	add	x0, x29, #112
+	adrp	x1, rt.constchar
+	add	x1, x1, #:lo12:rt.constchar
+	blr	x1
+	mov	x1, x0
+	sxtw	x0, w19
+	mov	x2, #24
+	mul	x3, x0, x2
+	adrp	x2, rt.reasons
+	add	x2, x2, #:lo12:rt.reasons
+	add	x19, x2, x3
+	cmp	x0, #5
+	bcc	.L67
+	add	x2, x29, #304
+	adrp	x0, strdata.282
+	add	x0, x0, #:lo12:strdata.282
+	str	x0, [x2]
+	mov	x2, #8
+	add	x0, x29, #304
+	add	x0, x0, x2
+	mov	x2, #16
+	str	x2, [x0]
+	mov	x2, #8
+	add	x2, x0, x2
+	mov	x0, #16
+	str	x0, [x2]
+	mov	x2, #16
+	add	x0, x29, #304
+	add	x0, x0, x2
+	ldr	x0, [x0]
+	mov	x3, #16
+	add	x2, x29, #136
+	add	x2, x2, x3
+	str	x0, [x2]
+	mov	x2, #8
+	add	x0, x29, #304
+	add	x0, x0, x2
+	ldr	x0, [x0]
+	mov	x3, #8
+	add	x2, x29, #136
+	add	x2, x2, x3
+	str	x0, [x2]
+	mov	x2, #0
+	add	x0, x29, #304
+	add	x0, x0, x2
+	ldr	x0, [x0]
+	mov	x3, #0
+	add	x2, x29, #136
+	add	x2, x2, x3
+	str	x0, [x2]
+	mov	x20, x1
+	mov	x1, #0
+	add	x0, x29, #136
+	adrp	x2, rt.abort_fixed
+	add	x2, x2, #:lo12:rt.abort_fixed
+	blr	x2
+	mov	x1, x20
+.L67:
+	mov	x0, #8
+	add	x0, x19, x0
+	ldr	x2, [x0]
+	mov	w0, #2
+	adrp	x3, rt.write
+	add	x3, x3, #:lo12:rt.write
+	blr	x3
+	add	x1, x29, #328
+	adrp	x0, strdata.288
+	add	x0, x0, #:lo12:strdata.288
+	str	x0, [x1]
+	mov	x1, #8
+	add	x0, x29, #328
+	add	x0, x0, x1
+	mov	x1, #1
+	str	x1, [x0]
+	mov	x1, #8
+	add	x1, x0, x1
+	mov	x0, #1
+	str	x0, [x1]
+	mov	x1, #16
+	add	x0, x29, #328
+	add	x0, x0, x1
+	ldr	x0, [x0]
+	mov	x2, #16
+	add	x1, x29, #160
+	add	x1, x1, x2
+	str	x0, [x1]
+	mov	x1, #8
+	add	x0, x29, #328
+	add	x0, x0, x1
+	ldr	x0, [x0]
+	mov	x2, #8
+	add	x1, x29, #160
+	add	x1, x1, x2
+	str	x0, [x1]
+	mov	x1, #0
+	add	x0, x29, #328
+	add	x0, x0, x1
+	ldr	x0, [x0]
+	mov	x2, #0
+	add	x1, x29, #160
+	add	x1, x1, x2
+	str	x0, [x1]
+	add	x0, x29, #160
+	adrp	x1, rt.constchar
+	add	x1, x1, #:lo12:rt.constchar
+	blr	x1
+	mov	x1, x0
+	mov	x2, #1
+	mov	w0, #2
+	adrp	x3, rt.write
+	add	x3, x3, #:lo12:rt.write
+	blr	x3
+	adrp	x0, rt.getpid
+	add	x0, x0, #:lo12:rt.getpid
+	blr	x0
+	mov	w1, #6
+	adrp	x2, rt.kill
+	add	x2, x2, #:lo12:rt.kill
+	blr	x2
+	ldr	x19, [x29, 360]
+	ldr	x20, [x29, 352]
+	ldp	x29, x30, [sp], 368
 	ret
 /* end function rt.abort_fixed */
 
 .section ".text.rt.constchar", "ax"
 _rt.constchar:
-	pushq %rbp
-	movq %rsp, %rbp
-	movq 16(%rbp), %rax
-	leave
+	stp	x29, x30, [sp, -16]!
+	mov	x29, sp
+	ldr	x0, [x0]
+	ldp	x29, x30, [sp], 16
 	ret
 /* end function rt.constchar */
 
@@ -680,248 +1027,562 @@ _strdata.461:
 .section ".text.rt.compile", "ax"
 .globl _rt.compile
 _rt.compile:
-	pushq %rbp
-	movq %rsp, %rbp
-	subq $368, %rsp
-	pushq %rbx
-	pushq %r12
-	pushq %r13
-	pushq %r14
-	movl $0, -364(%rbp)
-	movl $-1, -360(%rbp)
-	movl $-1, -356(%rbp)
-	movl $0, %esi
-	leaq -360(%rbp), %rdi
-	callq _rt.pipe2
-	callq _rt.fork
-	movl %eax, %edi
-	cmpl $0, %edi
-	jz Lbb76
-	movl %edi, %ebx
-	jmp Lbb79
-Lbb76:
-	leaq -360(%rbp), %rax
-	addq $4, %rax
-	movl %edi, %ebx
-	movl (%rax), %edi
-	callq _rt.close
-	movl %ebx, %edi
-	leaq -360(%rbp), %rax
-	addq $0, %rax
-	movl %edi, %ebx
-	movl (%rax), %edi
-	movl $0, %esi
-	callq _rt.dup2
-	movl %ebx, %edi
-	movl %edi, %ebx
-	movl $1, %edi
-	callq _rt.close
-	movl %ebx, %edi
-	movl %edi, %ebx
-	movl $2, %edi
-	callq _rt.close
-	leaq _strdata.346(%rip), %rax
-	movq %rax, -280(%rbp)
-	movq $8, -272(%rbp)
-	movq $8, -264(%rbp)
-	leaq _strdata.346(%rip), %rax
-	movq %rax, -304(%rbp)
-	movq $8, -296(%rbp)
-	movq $8, -288(%rbp)
-	subq $32, %rsp
-	movq %rsp, %rcx
-	movq -288(%rbp), %rax
-	movq %rax, 16(%rcx)
-	movq -296(%rbp), %rax
-	movq %rax, 8(%rcx)
-	movq -304(%rbp), %rax
-	movq %rax, 0(%rcx)
-	callq _rt.constchar
-	subq $-32, %rsp
-	movq %rax, -256(%rbp)
-	leaq _strdata.357(%rip), %rax
-	movq %rax, -232(%rbp)
-	movq $2, -224(%rbp)
-	movq $2, -216(%rbp)
-	subq $32, %rsp
-	movq %rsp, %rcx
-	movq -216(%rbp), %rax
-	movq %rax, 16(%rcx)
-	movq -224(%rbp), %rax
-	movq %rax, 8(%rcx)
-	movq -232(%rbp), %rax
-	movq %rax, 0(%rcx)
-	callq _rt.constchar
-	subq $-32, %rsp
-	movq %rax, -248(%rbp)
-	movq $0, -240(%rbp)
-	leaq _strdata.365(%rip), %rax
-	movq %rax, -192(%rbp)
-	movq $14, -184(%rbp)
-	movq $14, -176(%rbp)
-	subq $32, %rsp
-	movq %rsp, %rcx
-	movq -176(%rbp), %rax
-	movq %rax, 16(%rcx)
-	movq -184(%rbp), %rax
-	movq %rax, 8(%rcx)
-	movq -192(%rbp), %rax
-	movq %rax, 0(%rcx)
-	callq _rt.constchar
-	subq $-32, %rsp
-	movq %rax, -208(%rbp)
-	movq $0, -200(%rbp)
-	subq $32, %rsp
-	movq %rsp, %rcx
-	movq -288(%rbp), %rax
-	movq %rax, 16(%rcx)
-	movq -296(%rbp), %rax
-	movq %rax, 8(%rcx)
-	movq -304(%rbp), %rax
-	movq %rax, 0(%rcx)
-	callq _rt.constchar
-	movq %rax, %rdi
-	subq $-32, %rsp
-	leaq -208(%rbp), %rdx
-	leaq -256(%rbp), %rsi
-	callq _rt.execve
-	leaq _strdata.371(%rip), %rax
-	movq %rax, -168(%rbp)
-	movq $36, -160(%rbp)
-	movq $36, -152(%rbp)
-	subq $32, %rsp
-	movq %rsp, %rcx
-	movq -152(%rbp), %rax
-	movq %rax, 16(%rcx)
-	movq -160(%rbp), %rax
-	movq %rax, 8(%rcx)
-	movq -168(%rbp), %rax
-	movq %rax, 0(%rcx)
-	callq _rt.abort
-	subq $-32, %rsp
-Lbb79:
-	cmpl $-1, %ebx
-	jnz Lbb81
-	leaq _strdata.381(%rip), %rax
-	movq %rax, -144(%rbp)
-	movq $35, -136(%rbp)
-	movq $35, -128(%rbp)
-	subq $32, %rsp
-	movq %rsp, %rcx
-	movq -128(%rbp), %rax
-	movq %rax, 16(%rcx)
-	movq -136(%rbp), %rax
-	movq %rax, 8(%rcx)
-	movq -144(%rbp), %rax
-	movq %rax, 0(%rcx)
-	callq _rt.abort
-	movl %ebx, %edi
-	subq $-32, %rsp
-	jmp Lbb82
-Lbb81:
-	movl %ebx, %edi
-Lbb82:
-	leaq -360(%rbp), %rax
-	addq $0, %rax
-	movl %edi, %ebx
-	movl (%rax), %edi
-	callq _rt.close
-	subq $32, %rsp
-	movq %rsp, %rcx
-	movq 32(%rbp), %rax
-	movq %rax, 16(%rcx)
-	movq 24(%rbp), %rax
-	movq %rax, 8(%rcx)
-	movq 16(%rbp), %rax
-	movq %rax, 0(%rcx)
-	callq _rt.constchar
-	movl %ebx, %edi
-	movq %rax, %r12
-	subq $-32, %rsp
-	movl %edi, %r13d
-	movl $0, %ebx
-Lbb85:
-	movq 24(%rbp), %rax
-	cmpq %rax, %rbx
-	jae Lbb90
-	leaq -360(%rbp), %rax
-	addq $4, %rax
-	movl (%rax), %edi
-	movq %r12, %rsi
-	addq %rbx, %rsi
-	movq 24(%rbp), %rax
-	movq %rax, %rdx
-	subq %rbx, %rdx
-	callq _rt.write
-	movq %rax, %r14
-	cmpq $0, %r14
-	ja Lbb89
-	leaq _strdata.428(%rip), %rax
-	movq %rax, -72(%rbp)
-	movq $36, -64(%rbp)
-	movq $36, -56(%rbp)
-	subq $32, %rsp
-	movq %rsp, %rcx
-	movq -56(%rbp), %rax
-	movq %rax, 16(%rcx)
-	movq -64(%rbp), %rax
-	movq %rax, 8(%rcx)
-	movq -72(%rbp), %rax
-	movq %rax, 0(%rcx)
-	callq _rt.abort
-	subq $-32, %rsp
-Lbb89:
-	addq %r14, %rbx
-	jmp Lbb85
-Lbb90:
-	movl %r13d, %edi
-	leaq -360(%rbp), %rax
-	addq $4, %rax
-	movl %edi, %ebx
-	movl (%rax), %edi
-	callq _rt.close
-	movl %ebx, %edi
-	movl $0, %ecx
-	movl $0, %edx
-	leaq -364(%rbp), %rsi
-	callq _rt.wait4
-	movl -364(%rbp), %edi
-	callq _rt.wifexited
-	cmpl $0, %eax
-	jnz Lbb98
-	movl -364(%rbp), %edi
-	callq _rt.wifsignaled
-	cmpl $0, %eax
-	jnz Lbb97
-	leaq _strdata.461(%rip), %rax
-	movq %rax, -24(%rbp)
-	movq $36, -16(%rbp)
-	movq $36, -8(%rbp)
-	subq $32, %rsp
-	movq %rsp, %rcx
-	movq -8(%rbp), %rax
-	movq %rax, 16(%rcx)
-	movq -16(%rbp), %rax
-	movq %rax, 8(%rcx)
-	movq -24(%rbp), %rax
-	movq %rax, 0(%rcx)
-	callq _rt.abort
-	subq $-32, %rsp
-	movl $0, %eax
-	jmp Lbb99
-Lbb97:
-	movl -364(%rbp), %edi
-	callq _rt.wtermsig
-	jmp Lbb99
-Lbb98:
-	movl -364(%rbp), %edi
-	callq _rt.wexitstatus
-Lbb99:
-	popq %r14
-	popq %r13
-	popq %r12
-	popq %rbx
-	leave
+	sub	sp, sp, #640
+	stp	x29, x30, [sp, -16]!
+	mov	x29, sp
+	str	x19, [x29, 648]
+	str	x20, [x29, 640]
+	str	x21, [x29, 632]
+	str	x22, [x29, 624]
+	str	x23, [x29, 616]
+	add	x2, x29, #28
+	mov	w1, #0
+	str	w1, [x2]
+	add	x2, x29, #32
+	mov	w1, #-1
+	str	w1, [x2]
+	mov	x2, #4
+	add	x1, x29, #32
+	add	x2, x1, x2
+	mov	w1, #-1
+	str	w1, [x2]
+	mov	w1, #0
+	mov	x19, x0
+	add	x0, x29, #32
+	adrp	x2, rt.pipe2
+	add	x2, x2, #:lo12:rt.pipe2
+	blr	x2
+	mov	x0, x19
+	mov	x20, x0
+	adrp	x0, rt.fork
+	add	x0, x0, #:lo12:rt.fork
+	blr	x0
+	cmp	w0, #0
+	bne	.L77
+	mov	x1, #4
+	mov	w19, w0
+	add	x0, x29, #32
+	add	x0, x0, x1
+	ldr	w0, [x0]
+	adrp	x1, rt.close
+	add	x1, x1, #:lo12:rt.close
+	blr	x1
+	mov	w0, w19
+	mov	x1, #0
+	mov	w19, w0
+	add	x0, x29, #32
+	add	x0, x0, x1
+	ldr	w0, [x0]
+	mov	w1, #0
+	adrp	x2, rt.dup2
+	add	x2, x2, #:lo12:rt.dup2
+	blr	x2
+	mov	w0, w19
+	mov	w19, w0
+	mov	w0, #1
+	adrp	x1, rt.close
+	add	x1, x1, #:lo12:rt.close
+	blr	x1
+	mov	w0, w19
+	mov	w19, w0
+	mov	w0, #2
+	adrp	x1, rt.close
+	add	x1, x1, #:lo12:rt.close
+	blr	x1
+	mov	w0, w19
+	add	x2, x29, #328
+	adrp	x1, strdata.346
+	add	x1, x1, #:lo12:strdata.346
+	str	x1, [x2]
+	mov	x2, #8
+	add	x1, x29, #328
+	add	x1, x1, x2
+	mov	x2, #8
+	str	x2, [x1]
+	mov	x2, #8
+	add	x2, x1, x2
+	mov	x1, #8
+	str	x1, [x2]
+	add	x2, x29, #304
+	adrp	x1, strdata.346
+	add	x1, x1, #:lo12:strdata.346
+	str	x1, [x2]
+	mov	x2, #8
+	add	x1, x29, #304
+	add	x1, x1, x2
+	mov	x2, #8
+	str	x2, [x1]
+	mov	x2, #8
+	add	x2, x1, x2
+	mov	x1, #8
+	str	x1, [x2]
+	mov	x2, #16
+	add	x1, x29, #304
+	add	x1, x1, x2
+	ldr	x1, [x1]
+	mov	x3, #16
+	add	x2, x29, #136
+	add	x2, x2, x3
+	str	x1, [x2]
+	mov	x2, #8
+	add	x1, x29, #304
+	add	x1, x1, x2
+	ldr	x1, [x1]
+	mov	x3, #8
+	add	x2, x29, #136
+	add	x2, x2, x3
+	str	x1, [x2]
+	mov	x2, #0
+	add	x1, x29, #304
+	add	x1, x1, x2
+	ldr	x1, [x1]
+	mov	x3, #0
+	add	x2, x29, #136
+	add	x2, x2, x3
+	str	x1, [x2]
+	mov	w19, w0
+	add	x0, x29, #136
+	adrp	x1, rt.constchar
+	add	x1, x1, #:lo12:rt.constchar
+	blr	x1
+	mov	x1, x0
+	mov	w0, w19
+	add	x2, x29, #352
+	str	x1, [x2]
+	mov	x2, #8
+	add	x1, x29, #352
+	add	x19, x1, x2
+	add	x2, x29, #376
+	adrp	x1, strdata.357
+	add	x1, x1, #:lo12:strdata.357
+	str	x1, [x2]
+	mov	x2, #8
+	add	x1, x29, #376
+	add	x1, x1, x2
+	mov	x2, #2
+	str	x2, [x1]
+	mov	x2, #8
+	add	x2, x1, x2
+	mov	x1, #2
+	str	x1, [x2]
+	mov	x2, #16
+	add	x1, x29, #376
+	add	x1, x1, x2
+	ldr	x1, [x1]
+	mov	x3, #16
+	add	x2, x29, #112
+	add	x2, x2, x3
+	str	x1, [x2]
+	mov	x2, #8
+	add	x1, x29, #376
+	add	x1, x1, x2
+	ldr	x1, [x1]
+	mov	x3, #8
+	add	x2, x29, #112
+	add	x2, x2, x3
+	str	x1, [x2]
+	mov	x2, #0
+	add	x1, x29, #376
+	add	x1, x1, x2
+	ldr	x1, [x1]
+	mov	x3, #0
+	add	x2, x29, #112
+	add	x2, x2, x3
+	str	x1, [x2]
+	mov	w21, w0
+	add	x0, x29, #112
+	adrp	x1, rt.constchar
+	add	x1, x1, #:lo12:rt.constchar
+	blr	x1
+	mov	x1, x0
+	mov	w0, w21
+	str	x1, [x19]
+	mov	x2, #16
+	add	x1, x29, #352
+	add	x2, x1, x2
+	mov	x1, #0
+	str	x1, [x2]
+	add	x2, x29, #416
+	adrp	x1, strdata.365
+	add	x1, x1, #:lo12:strdata.365
+	str	x1, [x2]
+	mov	x2, #8
+	add	x1, x29, #416
+	add	x1, x1, x2
+	mov	x2, #14
+	str	x2, [x1]
+	mov	x2, #8
+	add	x2, x1, x2
+	mov	x1, #14
+	str	x1, [x2]
+	mov	x2, #16
+	add	x1, x29, #416
+	add	x1, x1, x2
+	ldr	x1, [x1]
+	mov	x3, #16
+	add	x2, x29, #88
+	add	x2, x2, x3
+	str	x1, [x2]
+	mov	x2, #8
+	add	x1, x29, #416
+	add	x1, x1, x2
+	ldr	x1, [x1]
+	mov	x3, #8
+	add	x2, x29, #88
+	add	x2, x2, x3
+	str	x1, [x2]
+	mov	x2, #0
+	add	x1, x29, #416
+	add	x1, x1, x2
+	ldr	x1, [x1]
+	mov	x3, #0
+	add	x2, x29, #88
+	add	x2, x2, x3
+	str	x1, [x2]
+	mov	w19, w0
+	add	x0, x29, #88
+	adrp	x1, rt.constchar
+	add	x1, x1, #:lo12:rt.constchar
+	blr	x1
+	mov	x1, x0
+	mov	w0, w19
+	add	x2, x29, #400
+	str	x1, [x2]
+	mov	x2, #8
+	add	x1, x29, #400
+	add	x2, x1, x2
+	mov	x1, #0
+	str	x1, [x2]
+	mov	x2, #16
+	add	x1, x29, #304
+	add	x1, x1, x2
+	ldr	x1, [x1]
+	mov	x3, #16
+	add	x2, x29, #64
+	add	x2, x2, x3
+	str	x1, [x2]
+	mov	x2, #8
+	add	x1, x29, #304
+	add	x1, x1, x2
+	ldr	x1, [x1]
+	mov	x3, #8
+	add	x2, x29, #64
+	add	x2, x2, x3
+	str	x1, [x2]
+	mov	x2, #0
+	add	x1, x29, #304
+	add	x1, x1, x2
+	ldr	x1, [x1]
+	mov	x3, #0
+	add	x2, x29, #64
+	add	x2, x2, x3
+	str	x1, [x2]
+	mov	w19, w0
+	add	x0, x29, #64
+	adrp	x1, rt.constchar
+	add	x1, x1, #:lo12:rt.constchar
+	blr	x1
+	add	x2, x29, #400
+	add	x1, x29, #352
+	adrp	x3, rt.execve
+	add	x3, x3, #:lo12:rt.execve
+	blr	x3
+	mov	w0, w19
+	add	x2, x29, #440
+	adrp	x1, strdata.371
+	add	x1, x1, #:lo12:strdata.371
+	str	x1, [x2]
+	mov	x2, #8
+	add	x1, x29, #440
+	add	x1, x1, x2
+	mov	x2, #36
+	str	x2, [x1]
+	mov	x2, #8
+	add	x2, x1, x2
+	mov	x1, #36
+	str	x1, [x2]
+	mov	x2, #16
+	add	x1, x29, #440
+	add	x1, x1, x2
+	ldr	x1, [x1]
+	mov	x3, #16
+	add	x2, x29, #40
+	add	x2, x2, x3
+	str	x1, [x2]
+	mov	x2, #8
+	add	x1, x29, #440
+	add	x1, x1, x2
+	ldr	x1, [x1]
+	mov	x3, #8
+	add	x2, x29, #40
+	add	x2, x2, x3
+	str	x1, [x2]
+	mov	x2, #0
+	add	x1, x29, #440
+	add	x1, x1, x2
+	ldr	x1, [x1]
+	mov	x3, #0
+	add	x2, x29, #40
+	add	x2, x2, x3
+	str	x1, [x2]
+	mov	w19, w0
+	add	x0, x29, #40
+	adrp	x1, rt.abort
+	add	x1, x1, #:lo12:rt.abort
+	blr	x1
+	mov	w0, w19
+.L77:
+	cmn	w0, #1
+	bne	.L79
+	add	x2, x29, #464
+	adrp	x1, strdata.381
+	add	x1, x1, #:lo12:strdata.381
+	str	x1, [x2]
+	mov	x2, #8
+	add	x1, x29, #464
+	add	x1, x1, x2
+	mov	x2, #35
+	str	x2, [x1]
+	mov	x2, #8
+	add	x2, x1, x2
+	mov	x1, #35
+	str	x1, [x2]
+	mov	x2, #16
+	add	x1, x29, #464
+	add	x1, x1, x2
+	ldr	x1, [x1]
+	mov	x3, #16
+	add	x2, x29, #160
+	add	x2, x2, x3
+	str	x1, [x2]
+	mov	x2, #8
+	add	x1, x29, #464
+	add	x1, x1, x2
+	ldr	x1, [x1]
+	mov	x3, #8
+	add	x2, x29, #160
+	add	x2, x2, x3
+	str	x1, [x2]
+	mov	x2, #0
+	add	x1, x29, #464
+	add	x1, x1, x2
+	ldr	x1, [x1]
+	mov	x3, #0
+	add	x2, x29, #160
+	add	x2, x2, x3
+	str	x1, [x2]
+	mov	w19, w0
+	add	x0, x29, #160
+	adrp	x1, rt.abort
+	add	x1, x1, #:lo12:rt.abort
+	blr	x1
+	mov	w0, w19
+.L79:
+	mov	x1, #0
+	mov	w19, w0
+	add	x0, x29, #32
+	add	x0, x0, x1
+	ldr	w0, [x0]
+	adrp	x1, rt.close
+	add	x1, x1, #:lo12:rt.close
+	blr	x1
+	mov	x0, x20
+	mov	x1, #16
+	add	x1, x0, x1
+	ldr	x1, [x1]
+	mov	x3, #16
+	add	x2, x29, #184
+	add	x2, x2, x3
+	str	x1, [x2]
+	mov	x1, #8
+	add	x1, x0, x1
+	ldr	x1, [x1]
+	mov	x3, #8
+	add	x2, x29, #184
+	add	x2, x2, x3
+	str	x1, [x2]
+	mov	x1, #0
+	add	x1, x0, x1
+	ldr	x1, [x1]
+	mov	x3, #0
+	add	x2, x29, #184
+	add	x2, x2, x3
+	str	x1, [x2]
+	mov	x20, x0
+	add	x0, x29, #184
+	adrp	x1, rt.constchar
+	add	x1, x1, #:lo12:rt.constchar
+	blr	x1
+	mov	x18, x0
+	mov	x0, x20
+	mov	x20, x18
+	mov	w21, w19
+	mov	x19, #0
+.L82:
+	mov	x1, #8
+	add	x1, x0, x1
+	ldr	x1, [x1]
+	cmp	x19, x1
+	bcs	.L87
+	mov	x1, #4
+	mov	x22, x0
+	add	x0, x29, #32
+	add	x0, x0, x1
+	ldr	w0, [x0]
+	add	x1, x20, x19
+	mov	x2, #8
+	add	x2, x22, x2
+	ldr	x2, [x2]
+	sub	x2, x2, x19
+	adrp	x3, rt.write
+	add	x3, x3, #:lo12:rt.write
+	blr	x3
+	mov	x18, x0
+	mov	x0, x22
+	mov	x22, x18
+	cmp	x22, #0
+	bhi	.L86
+	add	x2, x29, #536
+	adrp	x1, strdata.428
+	add	x1, x1, #:lo12:strdata.428
+	str	x1, [x2]
+	mov	x2, #8
+	add	x1, x29, #536
+	add	x1, x1, x2
+	mov	x2, #36
+	str	x2, [x1]
+	mov	x2, #8
+	add	x2, x1, x2
+	mov	x1, #36
+	str	x1, [x2]
+	mov	x2, #16
+	add	x1, x29, #536
+	add	x1, x1, x2
+	ldr	x1, [x1]
+	mov	x3, #16
+	add	x2, x29, #208
+	add	x2, x2, x3
+	str	x1, [x2]
+	mov	x2, #8
+	add	x1, x29, #536
+	add	x1, x1, x2
+	ldr	x1, [x1]
+	mov	x3, #8
+	add	x2, x29, #208
+	add	x2, x2, x3
+	str	x1, [x2]
+	mov	x2, #0
+	add	x1, x29, #536
+	add	x1, x1, x2
+	ldr	x1, [x1]
+	mov	x3, #0
+	add	x2, x29, #208
+	add	x2, x2, x3
+	str	x1, [x2]
+	mov	x23, x0
+	add	x0, x29, #208
+	adrp	x1, rt.abort
+	add	x1, x1, #:lo12:rt.abort
+	blr	x1
+	mov	x0, x23
+.L86:
+	add	x19, x19, x22
+	b	.L82
+.L87:
+	mov	w0, w21
+	mov	x1, #4
+	mov	w19, w0
+	add	x0, x29, #32
+	add	x0, x0, x1
+	ldr	w0, [x0]
+	adrp	x1, rt.close
+	add	x1, x1, #:lo12:rt.close
+	blr	x1
+	mov	w0, w19
+	mov	x3, #0
+	mov	w2, #0
+	add	x1, x29, #28
+	adrp	x4, rt.wait4
+	add	x4, x4, #:lo12:rt.wait4
+	blr	x4
+	add	x0, x29, #28
+	ldr	w0, [x0]
+	adrp	x1, rt.wifexited
+	add	x1, x1, #:lo12:rt.wifexited
+	blr	x1
+	cmp	w0, #0
+	bne	.L95
+	add	x0, x29, #28
+	ldr	w0, [x0]
+	adrp	x1, rt.wifsignaled
+	add	x1, x1, #:lo12:rt.wifsignaled
+	blr	x1
+	cmp	w0, #0
+	bne	.L94
+	add	x1, x29, #584
+	adrp	x0, strdata.461
+	add	x0, x0, #:lo12:strdata.461
+	str	x0, [x1]
+	mov	x1, #8
+	add	x0, x29, #584
+	add	x0, x0, x1
+	mov	x1, #36
+	str	x1, [x0]
+	mov	x1, #8
+	add	x1, x0, x1
+	mov	x0, #36
+	str	x0, [x1]
+	mov	x1, #16
+	add	x0, x29, #584
+	add	x0, x0, x1
+	ldr	x0, [x0]
+	mov	x2, #16
+	add	x1, x29, #232
+	add	x1, x1, x2
+	str	x0, [x1]
+	mov	x1, #8
+	add	x0, x29, #584
+	add	x0, x0, x1
+	ldr	x0, [x0]
+	mov	x2, #8
+	add	x1, x29, #232
+	add	x1, x1, x2
+	str	x0, [x1]
+	mov	x1, #0
+	add	x0, x29, #584
+	add	x0, x0, x1
+	ldr	x0, [x0]
+	mov	x2, #0
+	add	x1, x29, #232
+	add	x1, x1, x2
+	str	x0, [x1]
+	add	x0, x29, #232
+	adrp	x1, rt.abort
+	add	x1, x1, #:lo12:rt.abort
+	blr	x1
+	mov	w0, #0
+	b	.L96
+.L94:
+	add	x0, x29, #28
+	ldr	w0, [x0]
+	adrp	x1, rt.wtermsig
+	add	x1, x1, #:lo12:rt.wtermsig
+	blr	x1
+	b	.L96
+.L95:
+	add	x0, x29, #28
+	ldr	w0, [x0]
+	adrp	x1, rt.wexitstatus
+	add	x1, x1, #:lo12:rt.wexitstatus
+	blr	x1
+.L96:
+	ldr	x19, [x29, 648]
+	ldr	x20, [x29, 640]
+	ldr	x21, [x29, 632]
+	ldr	x22, [x29, 624]
+	ldr	x23, [x29, 616]
+	ldp	x29, x30, [sp], 16
+	add	sp, sp, #640
 	ret
 /* end function rt.compile */
 
@@ -940,96 +1601,169 @@ _strdata.548:
 .section ".text.rt.ensure", "ax"
 .globl _rt.ensure
 _rt.ensure:
-	pushq %rbp
-	movq %rsp, %rbp
-	subq $56, %rsp
-	pushq %rbx
-	pushq %r12
-	pushq %r13
-	movq %rsi, %r13
-	movq %rdi, %r12
-	movq 16(%r12), %rbx
-	movq 8(%r12), %rax
-	cmpq %rax, %rbx
-	jae Lbb115
-Lbb102:
-	movq 8(%r12), %rax
-	cmpq %rax, %rbx
-	jae Lbb110
-	movq 16(%r12), %rax
-	cmpq %rax, %rbx
-	jae Lbb105
-	leaq _strdata.504(%rip), %rax
-	movq %rax, -48(%rbp)
-	movq $50, -40(%rbp)
-	movq $50, -32(%rbp)
-	subq $32, %rsp
-	movq %rsp, %rcx
-	movq -32(%rbp), %rax
-	movq %rax, 16(%rcx)
-	movq -40(%rbp), %rax
-	movq %rax, 8(%rcx)
-	movq -48(%rbp), %rax
-	movq %rax, 0(%rcx)
-	callq _rt.abort
-	movq %r13, %rsi
-	movq %r12, %rdi
-	subq $-32, %rsp
-	jmp Lbb106
-Lbb105:
-	movq %r13, %rsi
-	movq %r12, %rdi
-Lbb106:
-	cmpq $0, %rbx
-	jz Lbb108
-	imulq $2, %rbx, %rbx
-	jmp Lbb109
-Lbb108:
-	movq 8(%rdi), %rbx
-Lbb109:
-	movq %rsi, %r13
-	movq %rdi, %r12
-	jmp Lbb102
-Lbb110:
-	movq %rbx, 16(%r12)
-	movq (%r12), %rdi
-	movq %rbx, %rsi
-	imulq %r13, %rsi
-	callq _rt.realloc
-	movq %rax, %rbx
-	cmpq $0, %rbx
-	setnz %al
-	movzbl %al, %eax
-	jnz Lbb112
-	movq 16(%r12), %rax
-	imulq %r13, %rax
-	cmpq $0, %rax
-	setz %al
-	movzbl %al, %eax
-Lbb112:
-	cmpl $0, %eax
-	jnz Lbb114
-	leaq _strdata.548(%rip), %rax
-	movq %rax, -24(%rbp)
-	movq $35, -16(%rbp)
-	movq $35, -8(%rbp)
-	subq $32, %rsp
-	movq %rsp, %rcx
-	movq -8(%rbp), %rax
-	movq %rax, 16(%rcx)
-	movq -16(%rbp), %rax
-	movq %rax, 8(%rcx)
-	movq -24(%rbp), %rax
-	movq %rax, 0(%rcx)
-	callq _rt.abort
-	subq $-32, %rsp
-Lbb114:
-	movq %rbx, (%r12)
-Lbb115:
-	popq %r13
-	popq %r12
-	popq %rbx
-	leave
+	stp	x29, x30, [sp, -144]!
+	mov	x29, sp
+	str	x19, [x29, 136]
+	str	x20, [x29, 128]
+	str	x21, [x29, 120]
+	mov	x2, #16
+	add	x2, x0, x2
+	ldr	x21, [x2]
+	mov	x2, #8
+	add	x2, x0, x2
+	ldr	x2, [x2]
+	cmp	x21, x2
+	bcs	.L113
+	mov	x19, x21
+.L100:
+	mov	x2, #8
+	add	x2, x0, x2
+	ldr	x2, [x2]
+	cmp	x19, x2
+	bcs	.L106
+	mov	x2, #16
+	add	x2, x0, x2
+	ldr	x2, [x2]
+	cmp	x19, x2
+	bcs	.L103
+	add	x3, x29, #64
+	adrp	x2, strdata.504
+	add	x2, x2, #:lo12:strdata.504
+	str	x2, [x3]
+	mov	x3, #8
+	add	x2, x29, #64
+	add	x2, x2, x3
+	mov	x3, #50
+	str	x3, [x2]
+	mov	x3, #8
+	add	x3, x2, x3
+	mov	x2, #50
+	str	x2, [x3]
+	mov	x3, #16
+	add	x2, x29, #64
+	add	x2, x2, x3
+	ldr	x2, [x2]
+	mov	x4, #16
+	add	x3, x29, #16
+	add	x3, x3, x4
+	str	x2, [x3]
+	mov	x3, #8
+	add	x2, x29, #64
+	add	x2, x2, x3
+	ldr	x2, [x2]
+	mov	x4, #8
+	add	x3, x29, #16
+	add	x3, x3, x4
+	str	x2, [x3]
+	mov	x3, #0
+	add	x2, x29, #64
+	add	x2, x2, x3
+	ldr	x2, [x2]
+	mov	x4, #0
+	add	x3, x29, #16
+	add	x3, x3, x4
+	str	x2, [x3]
+	mov	x20, x0
+	add	x0, x29, #16
+	mov	x21, x1
+	adrp	x1, rt.abort
+	add	x1, x1, #:lo12:rt.abort
+	blr	x1
+	mov	x1, x21
+	mov	x0, x20
+.L103:
+	cmp	x19, #0
+	beq	.L105
+	mov	x2, #2
+	mul	x19, x19, x2
+	b	.L100
+.L105:
+	mov	x2, #8
+	add	x2, x0, x2
+	ldr	x19, [x2]
+	b	.L100
+.L106:
+	mov	x21, x19
+	mov	x2, #16
+	add	x2, x0, x2
+	str	x21, [x2]
+	mov	x19, x0
+	ldr	x0, [x0]
+	mov	x20, x1
+	mul	x1, x21, x1
+	adrp	x2, rt.realloc
+	add	x2, x2, #:lo12:rt.realloc
+	blr	x2
+	mov	x1, x20
+	mov	x18, x0
+	mov	x0, x19
+	mov	x19, x18
+	cmp	x19, #0
+	cset	w2, ne
+	cmp	w2, #0
+	bne	.L109
+	mov	x2, #16
+	add	x2, x0, x2
+	ldr	x2, [x2]
+	mul	x1, x2, x1
+	cmp	x1, #0
+	cset	w1, eq
+	b	.L110
+.L109:
+	mov	w1, w2
+.L110:
+	cmp	w1, #0
+	bne	.L112
+	add	x2, x29, #88
+	adrp	x1, strdata.548
+	add	x1, x1, #:lo12:strdata.548
+	str	x1, [x2]
+	mov	x2, #8
+	add	x1, x29, #88
+	add	x1, x1, x2
+	mov	x2, #35
+	str	x2, [x1]
+	mov	x2, #8
+	add	x2, x1, x2
+	mov	x1, #35
+	str	x1, [x2]
+	mov	x2, #16
+	add	x1, x29, #88
+	add	x1, x1, x2
+	ldr	x1, [x1]
+	mov	x3, #16
+	add	x2, x29, #40
+	add	x2, x2, x3
+	str	x1, [x2]
+	mov	x2, #8
+	add	x1, x29, #88
+	add	x1, x1, x2
+	ldr	x1, [x1]
+	mov	x3, #8
+	add	x2, x29, #40
+	add	x2, x2, x3
+	str	x1, [x2]
+	mov	x2, #0
+	add	x1, x29, #88
+	add	x1, x1, x2
+	ldr	x1, [x1]
+	mov	x3, #0
+	add	x2, x29, #40
+	add	x2, x2, x3
+	str	x1, [x2]
+	mov	x20, x0
+	add	x0, x29, #40
+	adrp	x1, rt.abort
+	add	x1, x1, #:lo12:rt.abort
+	blr	x1
+	mov	x0, x20
+.L112:
+	str	x19, [x0]
+.L113:
+	ldr	x19, [x29, 136]
+	ldr	x20, [x29, 128]
+	ldr	x21, [x29, 120]
+	ldp	x29, x30, [sp], 144
 	ret
 /* end function rt.ensure */
 
@@ -1042,65 +1776,103 @@ _strdata.604:
 .section ".text.rt.unensure", "ax"
 .globl _rt.unensure
 _rt.unensure:
-	pushq %rbp
-	movq %rsp, %rbp
-	subq $32, %rsp
-	pushq %rbx
-	pushq %r12
-	movq 16(%rdi), %rax
-Lbb118:
-	movq 8(%rdi), %rcx
-	cmpq %rcx, %rax
-	jbe Lbb120
-	movl $2, %ecx
-	movl $0, %edx
-	divq %rcx
-	jmp Lbb118
-Lbb120:
-	imulq $2, %rax, %rax
-	movq %rax, 16(%rdi)
-	movq %rdi, %r12
-	movq (%rdi), %rdi
-	movq %rsi, %rbx
-	imulq %rax, %rsi
-	callq _rt.realloc
-	movq %rbx, %rsi
-	movq %rax, %rbx
-	cmpq $0, %rbx
-	setnz %al
-	movzbl %al, %eax
-	jnz Lbb122
-	movq 16(%r12), %rax
-	imulq %rsi, %rax
-	cmpq $0, %rax
-	setz %al
-	movzbl %al, %eax
-Lbb122:
-	cmpl $0, %eax
-	jnz Lbb124
-	leaq _strdata.604(%rip), %rax
-	movq %rax, -24(%rbp)
-	movq $35, -16(%rbp)
-	movq $35, -8(%rbp)
-	subq $32, %rsp
-	movq %rsp, %rcx
-	movq -8(%rbp), %rax
-	movq %rax, 16(%rcx)
-	movq -16(%rbp), %rax
-	movq %rax, 8(%rcx)
-	movq -24(%rbp), %rax
-	movq %rax, 0(%rcx)
-	callq _rt.abort
-	movq %r12, %rdi
-	subq $-32, %rsp
-	jmp Lbb125
-Lbb124:
-	movq %r12, %rdi
-Lbb125:
-	movq %rbx, (%rdi)
-	popq %r12
-	popq %rbx
-	leave
+	stp	x29, x30, [sp, -80]!
+	mov	x29, sp
+	str	x19, [x29, 72]
+	str	x20, [x29, 64]
+	mov	x2, #16
+	add	x2, x0, x2
+	ldr	x2, [x2]
+.L116:
+	mov	x3, #8
+	add	x3, x0, x3
+	ldr	x3, [x3]
+	cmp	x2, x3
+	bls	.L118
+	mov	x3, #2
+	udiv	x2, x2, x3
+	b	.L116
+.L118:
+	mov	x20, x1
+	mov	x1, #2
+	mul	x1, x2, x1
+	mov	x2, #16
+	add	x2, x0, x2
+	str	x1, [x2]
+	mov	x19, x0
+	ldr	x0, [x0]
+	mul	x1, x1, x20
+	adrp	x2, rt.realloc
+	add	x2, x2, #:lo12:rt.realloc
+	blr	x2
+	mov	x1, x20
+	mov	x18, x0
+	mov	x0, x19
+	mov	x19, x18
+	cmp	x19, #0
+	cset	w2, ne
+	cmp	w2, #0
+	bne	.L120
+	mov	x2, #16
+	add	x2, x0, x2
+	ldr	x2, [x2]
+	mul	x1, x2, x1
+	cmp	x1, #0
+	cset	w1, eq
+	b	.L121
+.L120:
+	mov	w1, w2
+.L121:
+	cmp	w1, #0
+	bne	.L123
+	add	x2, x29, #40
+	adrp	x1, strdata.604
+	add	x1, x1, #:lo12:strdata.604
+	str	x1, [x2]
+	mov	x2, #8
+	add	x1, x29, #40
+	add	x1, x1, x2
+	mov	x2, #35
+	str	x2, [x1]
+	mov	x2, #8
+	add	x2, x1, x2
+	mov	x1, #35
+	str	x1, [x2]
+	mov	x2, #16
+	add	x1, x29, #40
+	add	x1, x1, x2
+	ldr	x1, [x1]
+	mov	x3, #16
+	add	x2, x29, #16
+	add	x2, x2, x3
+	str	x1, [x2]
+	mov	x2, #8
+	add	x1, x29, #40
+	add	x1, x1, x2
+	ldr	x1, [x1]
+	mov	x3, #8
+	add	x2, x29, #16
+	add	x2, x2, x3
+	str	x1, [x2]
+	mov	x2, #0
+	add	x1, x29, #40
+	add	x1, x1, x2
+	ldr	x1, [x1]
+	mov	x3, #0
+	add	x2, x29, #16
+	add	x2, x2, x3
+	str	x1, [x2]
+	mov	x20, x0
+	add	x0, x29, #16
+	adrp	x1, rt.abort
+	add	x1, x1, #:lo12:rt.abort
+	blr	x1
+	mov	x0, x20
+.L123:
+	str	x19, [x0]
+	ldr	x19, [x29, 72]
+	ldr	x20, [x29, 64]
+	ldp	x29, x30, [sp], 80
 	ret
 /* end function rt.unensure */
 
@@ -1161,14 +1933,17 @@ _rt.bins:
 
 .section ".text.rt.bin2size", "ax"
 _rt.bin2size:
-	pushq %rbp
-	movq %rsp, %rbp
-	movq %rdi, %rax
-	addq $1, %rax
-	imulq $2, %rax, %rax
-	subq $1, %rax
-	imulq $8, %rax, %rax
-	leave
+	stp	x29, x30, [sp, -16]!
+	mov	x29, sp
+	mov	x1, #1
+	add	x0, x0, x1
+	mov	x1, #2
+	mul	x0, x0, x1
+	mov	x1, #1
+	sub	x0, x0, x1
+	mov	x1, #8
+	mul	x0, x0, x1
+	ldp	x29, x30, [sp], 16
 	ret
 /* end function rt.bin2size */
 
@@ -1180,41 +1955,68 @@ _strdata.629:
 
 .section ".text.rt.size2bin", "ax"
 _rt.size2bin:
-	pushq %rbp
-	movq %rsp, %rbp
-	subq $40, %rsp
-	pushq %rbx
-	movq %rdi, %rbx
-	movl $49, %edi
-	callq _rt.bin2size
-	cmpq %rax, %rbx
-	jbe Lbb133
-	leaq _strdata.629(%rip), %rax
-	movq %rax, -24(%rbp)
-	movq $48, -16(%rbp)
-	movq $48, -8(%rbp)
-	subq $32, %rsp
-	movq %rsp, %rcx
-	movq -8(%rbp), %rax
-	movq %rax, 16(%rcx)
-	movq -16(%rbp), %rax
-	movq %rax, 8(%rcx)
-	movq -24(%rbp), %rax
-	movq %rax, 0(%rcx)
-	callq _rt.abort
-	movq %rbx, %rdi
-	subq $-32, %rsp
-	jmp Lbb134
-Lbb133:
-	movq %rbx, %rdi
-Lbb134:
-	movq %rdi, %rax
-	addq $7, %rax
-	movl $16, %ecx
-	movl $0, %edx
-	divq %rcx
-	popq %rbx
-	leave
+	stp	x29, x30, [sp, -80]!
+	mov	x29, sp
+	str	x19, [x29, 72]
+	mov	x19, x0
+	mov	x0, #49
+	adrp	x1, rt.bin2size
+	add	x1, x1, #:lo12:rt.bin2size
+	blr	x1
+	mov	x1, x0
+	mov	x0, x19
+	cmp	x0, x1
+	bls	.L131
+	add	x2, x29, #40
+	adrp	x1, strdata.629
+	add	x1, x1, #:lo12:strdata.629
+	str	x1, [x2]
+	mov	x2, #8
+	add	x1, x29, #40
+	add	x1, x1, x2
+	mov	x2, #48
+	str	x2, [x1]
+	mov	x2, #8
+	add	x2, x1, x2
+	mov	x1, #48
+	str	x1, [x2]
+	mov	x2, #16
+	add	x1, x29, #40
+	add	x1, x1, x2
+	ldr	x1, [x1]
+	mov	x3, #16
+	add	x2, x29, #16
+	add	x2, x2, x3
+	str	x1, [x2]
+	mov	x2, #8
+	add	x1, x29, #40
+	add	x1, x1, x2
+	ldr	x1, [x1]
+	mov	x3, #8
+	add	x2, x29, #16
+	add	x2, x2, x3
+	str	x1, [x2]
+	mov	x2, #0
+	add	x1, x29, #40
+	add	x1, x1, x2
+	ldr	x1, [x1]
+	mov	x3, #0
+	add	x2, x29, #16
+	add	x2, x2, x3
+	str	x1, [x2]
+	mov	x19, x0
+	add	x0, x29, #16
+	adrp	x1, rt.abort
+	add	x1, x1, #:lo12:rt.abort
+	blr	x1
+	mov	x0, x19
+.L131:
+	mov	x1, #7
+	add	x0, x0, x1
+	mov	x1, #16
+	udiv	x0, x0, x1
+	ldr	x19, [x29, 72]
+	ldp	x29, x30, [sp], 80
 	ret
 /* end function rt.size2bin */
 
@@ -1238,29 +2040,59 @@ _strdata.647:
 
 .section ".text.finifunc.638", "ax"
 _finifunc.638:
-	pushq %rbp
-	movq %rsp, %rbp
-	subq $32, %rsp
-	movl _rt.nalloc(%rip), %ecx
-	movl _rt.nfree(%rip), %eax
-	cmpl %eax, %ecx
-	jz Lbb139
-	leaq _strdata.647(%rip), %rax
-	movq %rax, -24(%rbp)
-	movq $35, -16(%rbp)
-	movq $35, -8(%rbp)
-	subq $32, %rsp
-	movq %rsp, %rcx
-	movq -8(%rbp), %rax
-	movq %rax, 16(%rcx)
-	movq -16(%rbp), %rax
-	movq %rax, 8(%rcx)
-	movq -24(%rbp), %rax
-	movq %rax, 0(%rcx)
-	callq _rt.abort
-	subq $-32, %rsp
-Lbb139:
-	leave
+	stp	x29, x30, [sp, -64]!
+	mov	x29, sp
+	adrp	x0, rt.nalloc
+	add	x0, x0, #:lo12:rt.nalloc
+	ldr	w0, [x0]
+	adrp	x1, rt.nfree
+	add	x1, x1, #:lo12:rt.nfree
+	ldr	w1, [x1]
+	cmp	w0, w1
+	beq	.L136
+	add	x1, x29, #40
+	adrp	x0, strdata.647
+	add	x0, x0, #:lo12:strdata.647
+	str	x0, [x1]
+	mov	x1, #8
+	add	x0, x29, #40
+	add	x0, x0, x1
+	mov	x1, #35
+	str	x1, [x0]
+	mov	x1, #8
+	add	x1, x0, x1
+	mov	x0, #35
+	str	x0, [x1]
+	mov	x1, #16
+	add	x0, x29, #40
+	add	x0, x0, x1
+	ldr	x0, [x0]
+	mov	x2, #16
+	add	x1, x29, #16
+	add	x1, x1, x2
+	str	x0, [x1]
+	mov	x1, #8
+	add	x0, x29, #40
+	add	x0, x0, x1
+	ldr	x0, [x0]
+	mov	x2, #8
+	add	x1, x29, #16
+	add	x1, x1, x2
+	str	x0, [x1]
+	mov	x1, #0
+	add	x0, x29, #40
+	add	x0, x0, x1
+	ldr	x0, [x0]
+	mov	x2, #0
+	add	x1, x29, #16
+	add	x1, x1, x2
+	str	x0, [x1]
+	add	x0, x29, #16
+	adrp	x1, rt.abort
+	add	x1, x1, #:lo12:rt.abort
+	blr	x1
+.L136:
+	ldp	x29, x30, [sp], 64
 	ret
 /* end function finifunc.638 */
 
@@ -1273,32 +2105,43 @@ _.fini.finifunc.638:
 .section ".text.rt.malloc", "ax"
 .globl _rt.malloc
 _rt.malloc:
-	pushq %rbp
-	movq %rsp, %rbp
-	subq $8, %rsp
-	pushq %rbx
-	cmpq $0, %rdi
-	jz Lbb146
-	movq %rdi, %rbx
-	movl $49, %edi
-	callq _rt.bin2size
-	movq %rbx, %rdi
-	cmpq %rax, %rdi
-	ja Lbb144
-	callq _rt.malloc_small
-	jmp Lbb145
-Lbb144:
-	callq _rt.malloc_large
-Lbb145:
-	movl _rt.nalloc(%rip), %ecx
-	addl $1, %ecx
-	movl %ecx, _rt.nalloc(%rip)
-	jmp Lbb147
-Lbb146:
-	movl $0, %eax
-Lbb147:
-	popq %rbx
-	leave
+	stp	x29, x30, [sp, -32]!
+	mov	x29, sp
+	str	x19, [x29, 24]
+	cmp	x0, #0
+	beq	.L143
+	mov	x19, x0
+	mov	x0, #49
+	adrp	x1, rt.bin2size
+	add	x1, x1, #:lo12:rt.bin2size
+	blr	x1
+	mov	x1, x0
+	mov	x0, x19
+	cmp	x0, x1
+	bhi	.L141
+	adrp	x1, rt.malloc_small
+	add	x1, x1, #:lo12:rt.malloc_small
+	blr	x1
+	b	.L142
+.L141:
+	adrp	x1, rt.malloc_large
+	add	x1, x1, #:lo12:rt.malloc_large
+	blr	x1
+.L142:
+	adrp	x1, rt.nalloc
+	add	x1, x1, #:lo12:rt.nalloc
+	ldr	w1, [x1]
+	mov	w2, #1
+	add	w1, w1, w2
+	adrp	x2, rt.nalloc
+	add	x2, x2, #:lo12:rt.nalloc
+	str	w1, [x2]
+	b	.L144
+.L143:
+	mov	x0, #0
+.L144:
+	ldr	x19, [x29, 24]
+	ldp	x29, x30, [sp], 32
 	ret
 /* end function rt.malloc */
 
@@ -1310,31 +2153,34 @@ _strdata.709:
 
 .section ".text.rt.malloc_large", "ax"
 _rt.malloc_large:
-	pushq %rbp
-	movq %rsp, %rbp
-	subq $40, %rsp
-	pushq %rbx
-	movq %rdi, %rax
-	addq $8, %rax
-	movq %rdi, %rbx
-	movq %rax, %rdi
-	addq $8, %rdi
-	callq _rt.segmalloc
-	movq %rbx, %rdi
-	cmpq $0, %rax
-	jz Lbb152
-	movq %rax, %rcx
-	addq $8, %rcx
-	addq $0, %rcx
-	movq %rdi, (%rcx)
-	addq $8, %rax
-	addq $8, %rax
-	jmp Lbb153
-Lbb152:
-	movl $0, %eax
-Lbb153:
-	popq %rbx
-	leave
+	stp	x29, x30, [sp, -64]!
+	mov	x29, sp
+	str	x19, [x29, 56]
+	mov	x19, x0
+	mov	x0, #8
+	add	x0, x19, x0
+	mov	x1, #8
+	add	x0, x0, x1
+	adrp	x1, rt.segmalloc
+	add	x1, x1, #:lo12:rt.segmalloc
+	blr	x1
+	cmp	x0, #0
+	beq	.L149
+	mov	x1, #8
+	add	x1, x0, x1
+	mov	x2, #0
+	add	x1, x1, x2
+	str	x19, [x1]
+	mov	x1, #8
+	add	x0, x0, x1
+	mov	x1, #8
+	add	x0, x0, x1
+	b	.L150
+.L149:
+	mov	x0, #0
+.L150:
+	ldr	x19, [x29, 56]
+	ldp	x29, x30, [sp], 64
 	ret
 /* end function rt.malloc_large */
 
@@ -1358,130 +2204,221 @@ _strdata.785:
 
 .section ".text.rt.malloc_small", "ax"
 _rt.malloc_small:
-	pushq %rbp
-	movq %rsp, %rbp
-	subq $88, %rsp
-	pushq %rbx
-	pushq %r12
-	pushq %r13
-	callq _rt.size2bin
-	movq %rax, %r13
-	imulq $8, %r13, %rcx
-	leaq _rt.bins(%rip), %rax
-	movq %rax, %rbx
-	addq %rcx, %rbx
-	cmpq $50, %r13
-	jb Lbb157
-	leaq _strdata.735(%rip), %rax
-	movq %rax, -72(%rbp)
-	movq $17, -64(%rbp)
-	movq $17, -56(%rbp)
-	subq $32, %rsp
-	movq %rsp, %rcx
-	movq -56(%rbp), %rax
-	movq %rax, 16(%rcx)
-	movq -64(%rbp), %rax
-	movq %rax, 8(%rcx)
-	movq -72(%rbp), %rax
-	movq %rax, 0(%rcx)
-	movl $0, %edi
-	callq _rt.abort_fixed
-	subq $-32, %rsp
-Lbb157:
-	movq (%rbx), %rax
-	cmpq $0, %rax
-	jnz Lbb162
-	movq %r13, %rdi
-	callq _rt.fill_bin
-	cmpq $0, %rax
-	jz Lbb162
-	imulq $8, %r13, %rdx
-	leaq _rt.bins(%rip), %rcx
-	movq %rcx, %rbx
-	addq %rdx, %rbx
-	cmpq $50, %r13
-	jb Lbb161
-	leaq _strdata.764(%rip), %rcx
-	movq %rcx, -48(%rbp)
-	movq $17, -40(%rbp)
-	movq $17, -32(%rbp)
-	subq $32, %rsp
-	movq %rsp, %rcx
-	movq -32(%rbp), %rdx
-	movq %rdx, 16(%rcx)
-	movq -40(%rbp), %rdx
-	movq %rdx, 8(%rcx)
-	movq %rax, %r12
-	movq -48(%rbp), %rax
-	movq %rax, 0(%rcx)
-	movl $0, %edi
-	callq _rt.abort_fixed
-	movq %r12, %rax
-	subq $-32, %rsp
-Lbb161:
-	movq %rax, (%rbx)
-Lbb162:
-	cmpq $0, %rax
-	jnz Lbb164
-	movl $0, %eax
-	jmp Lbb167
-Lbb164:
-	movq (%rax), %rbx
-	imulq $8, %r13, %rdx
-	leaq _rt.bins(%rip), %rcx
-	movq %rcx, %r12
-	addq %rdx, %r12
-	cmpq $50, %r13
-	jb Lbb166
-	leaq _strdata.785(%rip), %rcx
-	movq %rcx, -24(%rbp)
-	movq $17, -16(%rbp)
-	movq $17, -8(%rbp)
-	subq $32, %rsp
-	movq %rsp, %rcx
-	movq -8(%rbp), %rdx
-	movq %rdx, 16(%rcx)
-	movq -16(%rbp), %rdx
-	movq %rdx, 8(%rcx)
-	movq %rax, %r13
-	movq -24(%rbp), %rax
-	movq %rax, 0(%rcx)
-	movl $0, %edi
-	callq _rt.abort_fixed
-	movq %r13, %rax
-	subq $-32, %rsp
-Lbb166:
-	movq %rbx, (%r12)
-Lbb167:
-	popq %r13
-	popq %r12
-	popq %rbx
-	leave
+	stp	x29, x30, [sp, -192]!
+	mov	x29, sp
+	str	x19, [x29, 184]
+	str	x20, [x29, 176]
+	str	x21, [x29, 168]
+	adrp	x1, rt.size2bin
+	add	x1, x1, #:lo12:rt.size2bin
+	blr	x1
+	mov	x21, x0
+	mov	x0, #8
+	mul	x1, x21, x0
+	adrp	x0, rt.bins
+	add	x0, x0, #:lo12:rt.bins
+	add	x19, x0, x1
+	cmp	x21, #50
+	bcc	.L154
+	add	x1, x29, #88
+	adrp	x0, strdata.735
+	add	x0, x0, #:lo12:strdata.735
+	str	x0, [x1]
+	mov	x1, #8
+	add	x0, x29, #88
+	add	x0, x0, x1
+	mov	x1, #17
+	str	x1, [x0]
+	mov	x1, #8
+	add	x1, x0, x1
+	mov	x0, #17
+	str	x0, [x1]
+	mov	x1, #16
+	add	x0, x29, #88
+	add	x0, x0, x1
+	ldr	x0, [x0]
+	mov	x2, #16
+	add	x1, x29, #16
+	add	x1, x1, x2
+	str	x0, [x1]
+	mov	x1, #8
+	add	x0, x29, #88
+	add	x0, x0, x1
+	ldr	x0, [x0]
+	mov	x2, #8
+	add	x1, x29, #16
+	add	x1, x1, x2
+	str	x0, [x1]
+	mov	x1, #0
+	add	x0, x29, #88
+	add	x0, x0, x1
+	ldr	x0, [x0]
+	mov	x2, #0
+	add	x1, x29, #16
+	add	x1, x1, x2
+	str	x0, [x1]
+	mov	x1, #0
+	add	x0, x29, #16
+	adrp	x2, rt.abort_fixed
+	add	x2, x2, #:lo12:rt.abort_fixed
+	blr	x2
+.L154:
+	ldr	x0, [x19]
+	cmp	x0, #0
+	bne	.L159
+	mov	x0, x21
+	adrp	x1, rt.fill_bin
+	add	x1, x1, #:lo12:rt.fill_bin
+	blr	x1
+	cmp	x0, #0
+	beq	.L159
+	mov	x1, #8
+	mul	x2, x21, x1
+	adrp	x1, rt.bins
+	add	x1, x1, #:lo12:rt.bins
+	add	x19, x1, x2
+	cmp	x21, #50
+	bcc	.L158
+	add	x2, x29, #112
+	adrp	x1, strdata.764
+	add	x1, x1, #:lo12:strdata.764
+	str	x1, [x2]
+	mov	x2, #8
+	add	x1, x29, #112
+	add	x1, x1, x2
+	mov	x2, #17
+	str	x2, [x1]
+	mov	x2, #8
+	add	x2, x1, x2
+	mov	x1, #17
+	str	x1, [x2]
+	mov	x2, #16
+	add	x1, x29, #112
+	add	x1, x1, x2
+	ldr	x1, [x1]
+	mov	x3, #16
+	add	x2, x29, #40
+	add	x2, x2, x3
+	str	x1, [x2]
+	mov	x2, #8
+	add	x1, x29, #112
+	add	x1, x1, x2
+	ldr	x1, [x1]
+	mov	x3, #8
+	add	x2, x29, #40
+	add	x2, x2, x3
+	str	x1, [x2]
+	mov	x2, #0
+	add	x1, x29, #112
+	add	x1, x1, x2
+	ldr	x1, [x1]
+	mov	x3, #0
+	add	x2, x29, #40
+	add	x2, x2, x3
+	str	x1, [x2]
+	mov	x1, #0
+	mov	x20, x0
+	add	x0, x29, #40
+	adrp	x2, rt.abort_fixed
+	add	x2, x2, #:lo12:rt.abort_fixed
+	blr	x2
+	mov	x0, x20
+.L158:
+	str	x0, [x19]
+.L159:
+	cmp	x0, #0
+	bne	.L161
+	mov	x0, #0
+	b	.L164
+.L161:
+	ldr	x19, [x0]
+	mov	x1, #8
+	mul	x2, x21, x1
+	adrp	x1, rt.bins
+	add	x1, x1, #:lo12:rt.bins
+	add	x20, x1, x2
+	cmp	x21, #50
+	bcc	.L163
+	add	x2, x29, #136
+	adrp	x1, strdata.785
+	add	x1, x1, #:lo12:strdata.785
+	str	x1, [x2]
+	mov	x2, #8
+	add	x1, x29, #136
+	add	x1, x1, x2
+	mov	x2, #17
+	str	x2, [x1]
+	mov	x2, #8
+	add	x2, x1, x2
+	mov	x1, #17
+	str	x1, [x2]
+	mov	x2, #16
+	add	x1, x29, #136
+	add	x1, x1, x2
+	ldr	x1, [x1]
+	mov	x3, #16
+	add	x2, x29, #64
+	add	x2, x2, x3
+	str	x1, [x2]
+	mov	x2, #8
+	add	x1, x29, #136
+	add	x1, x1, x2
+	ldr	x1, [x1]
+	mov	x3, #8
+	add	x2, x29, #64
+	add	x2, x2, x3
+	str	x1, [x2]
+	mov	x2, #0
+	add	x1, x29, #136
+	add	x1, x1, x2
+	ldr	x1, [x1]
+	mov	x3, #0
+	add	x2, x29, #64
+	add	x2, x2, x3
+	str	x1, [x2]
+	mov	x1, #0
+	mov	x21, x0
+	add	x0, x29, #64
+	adrp	x2, rt.abort_fixed
+	add	x2, x2, #:lo12:rt.abort_fixed
+	blr	x2
+	mov	x0, x21
+.L163:
+	str	x19, [x20]
+.L164:
+	ldr	x19, [x29, 184]
+	ldr	x20, [x29, 176]
+	ldr	x21, [x29, 168]
+	ldp	x29, x30, [sp], 192
 	ret
 /* end function rt.malloc_small */
 
 .section ".text.rt.fill_bin", "ax"
 _rt.fill_bin:
-	pushq %rbp
-	movq %rsp, %rbp
-	subq $8, %rsp
-	pushq %rbx
-	callq _rt.bin2size
-	movq %rax, %rdi
-	movq %rdi, %rbx
-	movl $1048576, %edi
-	callq _rt.segmalloc
-	movq %rbx, %rdi
-	movq %rax, %rsi
-	cmpq $0, %rsi
-	jz Lbb171
-	callq _rt.list_from_block
-	jmp Lbb172
-Lbb171:
-	movl $0, %eax
-Lbb172:
-	popq %rbx
-	leave
+	stp	x29, x30, [sp, -32]!
+	mov	x29, sp
+	str	x19, [x29, 24]
+	adrp	x1, rt.bin2size
+	add	x1, x1, #:lo12:rt.bin2size
+	blr	x1
+	mov	x19, x0
+	mov	x0, #1048576
+	adrp	x1, rt.segmalloc
+	add	x1, x1, #:lo12:rt.segmalloc
+	blr	x1
+	mov	x1, x0
+	mov	x0, x19
+	cmp	x1, #0
+	beq	.L168
+	adrp	x2, rt.list_from_block
+	add	x2, x2, #:lo12:rt.list_from_block
+	blr	x2
+	b	.L169
+.L168:
+	mov	x0, #0
+.L169:
+	ldr	x19, [x29, 24]
+	ldp	x29, x30, [sp], 32
 	ret
 /* end function rt.fill_bin */
 
@@ -1493,43 +2430,46 @@ _strdata.872:
 
 .section ".text.rt.list_from_block", "ax"
 _rt.list_from_block:
-	pushq %rbp
-	movq %rsp, %rbp
-	subq $32, %rsp
-	movq %rdi, %rcx
-	addq $8, %rcx
-	movl $1048568, %eax
-	movl $0, %edx
-	divq %rcx
-	movq %rax, %rdx
-	movq %rsi, %rax
-	addq $8, %rax
-	movl $0, %ecx
-Lbb176:
-	movq %rdx, %r8
-	subq $1, %r8
-	cmpq %r8, %rcx
-	jz Lbb179
-	movq %rax, %r8
-	addq $8, %r8
-	addq %rdi, %r8
-	addq $8, %r8
-	movq %rdi, (%rax)
-	movq %r8, 8(%rax)
-	movq %rdi, %r8
-	addq $8, %r8
-	addq %r8, %rax
-	addq $1, %rcx
-	jmp Lbb176
-Lbb179:
-	movq %rax, %rcx
-	addq $0, %rcx
-	movq %rdi, (%rcx)
-	movq $0, 1(%rax)
-	movq %rsi, %rax
-	addq $8, %rax
-	addq $8, %rax
-	leave
+	stp	x29, x30, [sp, -48]!
+	mov	x29, sp
+	mov	x2, #8
+	add	x3, x0, x2
+	mov	x2, #1048568
+	udiv	x4, x2, x3
+	mov	x2, #8
+	add	x2, x1, x2
+	mov	x3, #0
+.L173:
+	mov	x5, #1
+	sub	x5, x4, x5
+	cmp	x3, x5
+	beq	.L176
+	mov	x5, #8
+	add	x6, x2, x5
+	add	x5, x6, x0
+	mov	x7, #8
+	add	x5, x5, x7
+	str	x0, [x2]
+	str	x5, [x6]
+	mov	x5, #8
+	add	x5, x0, x5
+	add	x2, x2, x5
+	mov	x5, #1
+	add	x3, x3, x5
+	b	.L173
+.L176:
+	mov	x3, #0
+	add	x3, x2, x3
+	str	x0, [x3]
+	mov	x0, #1
+	add	x2, x2, x0
+	mov	x0, #0
+	str	x0, [x2]
+	mov	x0, #8
+	add	x0, x1, x0
+	mov	x1, #8
+	add	x0, x0, x1
+	ldp	x29, x30, [sp], 48
 	ret
 /* end function rt.list_from_block */
 
@@ -1542,35 +2482,48 @@ _strdata.916:
 .section ".text.rt.free", "ax"
 .globl _rt.free
 _rt.free:
-	pushq %rbp
-	movq %rsp, %rbp
-	subq $32, %rsp
-	pushq %rbx
-	pushq %r12
-	cmpq $0, %rdi
-	jz Lbb188
-	movl _rt.nfree(%rip), %eax
-	addl $1, %eax
-	movl %eax, _rt.nfree(%rip)
-	movq %rdi, %rax
-	subq $8, %rax
-	addq $0, %rax
-	movq (%rax), %r12
-	movq %rdi, %rbx
-	movl $49, %edi
-	callq _rt.bin2size
-	movq %r12, %rsi
-	movq %rbx, %rdi
-	cmpq %rax, %rsi
-	jbe Lbb187
-	callq _rt.free_large
-	jmp Lbb188
-Lbb187:
-	callq _rt.free_small
-Lbb188:
-	popq %r12
-	popq %rbx
-	leave
+	stp	x29, x30, [sp, -64]!
+	mov	x29, sp
+	str	x19, [x29, 56]
+	str	x20, [x29, 48]
+	cmp	x0, #0
+	beq	.L185
+	adrp	x1, rt.nfree
+	add	x1, x1, #:lo12:rt.nfree
+	ldr	w1, [x1]
+	mov	w2, #1
+	add	w1, w1, w2
+	adrp	x2, rt.nfree
+	add	x2, x2, #:lo12:rt.nfree
+	str	w1, [x2]
+	mov	x1, #8
+	sub	x1, x0, x1
+	mov	x2, #0
+	add	x1, x1, x2
+	ldr	x1, [x1]
+	mov	x19, x0
+	mov	x0, #49
+	mov	x20, x1
+	adrp	x1, rt.bin2size
+	add	x1, x1, #:lo12:rt.bin2size
+	blr	x1
+	mov	x1, x20
+	mov	x2, x0
+	mov	x0, x19
+	cmp	x1, x2
+	bls	.L184
+	adrp	x2, rt.free_large
+	add	x2, x2, #:lo12:rt.free_large
+	blr	x2
+	b	.L185
+.L184:
+	adrp	x2, rt.free_small
+	add	x2, x2, #:lo12:rt.free_small
+	blr	x2
+.L185:
+	ldr	x19, [x29, 56]
+	ldr	x20, [x29, 48]
+	ldp	x29, x30, [sp], 64
 	ret
 /* end function rt.free */
 
@@ -1582,33 +2535,62 @@ _strdata.956:
 
 .section ".text.rt.free_large", "ax"
 _rt.free_large:
-	pushq %rbp
-	movq %rsp, %rbp
-	subq $32, %rsp
-	subq $16, %rdi
-	movq %rsi, %rax
-	addq $8, %rax
-	movq %rax, %rsi
-	addq $8, %rsi
-	callq _rt.segfree
-	cmpl $0, %eax
-	jz Lbb192
-	leaq _strdata.956(%rip), %rax
-	movq %rax, -24(%rbp)
-	movq $40, -16(%rbp)
-	movq $40, -8(%rbp)
-	subq $32, %rsp
-	movq %rsp, %rcx
-	movq -8(%rbp), %rax
-	movq %rax, 16(%rcx)
-	movq -16(%rbp), %rax
-	movq %rax, 8(%rcx)
-	movq -24(%rbp), %rax
-	movq %rax, 0(%rcx)
-	callq _rt.abort
-	subq $-32, %rsp
-Lbb192:
-	leave
+	stp	x29, x30, [sp, -64]!
+	mov	x29, sp
+	mov	x2, #16
+	sub	x0, x0, x2
+	mov	x2, #8
+	add	x1, x1, x2
+	mov	x2, #8
+	add	x1, x1, x2
+	adrp	x2, rt.segfree
+	add	x2, x2, #:lo12:rt.segfree
+	blr	x2
+	cmp	w0, #0
+	beq	.L189
+	add	x1, x29, #40
+	adrp	x0, strdata.956
+	add	x0, x0, #:lo12:strdata.956
+	str	x0, [x1]
+	mov	x1, #8
+	add	x0, x29, #40
+	add	x0, x0, x1
+	mov	x1, #40
+	str	x1, [x0]
+	mov	x1, #8
+	add	x1, x0, x1
+	mov	x0, #40
+	str	x0, [x1]
+	mov	x1, #16
+	add	x0, x29, #40
+	add	x0, x0, x1
+	ldr	x0, [x0]
+	mov	x2, #16
+	add	x1, x29, #16
+	add	x1, x1, x2
+	str	x0, [x1]
+	mov	x1, #8
+	add	x0, x29, #40
+	add	x0, x0, x1
+	ldr	x0, [x0]
+	mov	x2, #8
+	add	x1, x29, #16
+	add	x1, x1, x2
+	str	x0, [x1]
+	mov	x1, #0
+	add	x0, x29, #40
+	add	x0, x0, x1
+	ldr	x0, [x0]
+	mov	x2, #0
+	add	x1, x29, #16
+	add	x1, x1, x2
+	str	x0, [x1]
+	add	x0, x29, #16
+	adrp	x1, rt.abort
+	add	x1, x1, #:lo12:rt.abort
+	blr	x1
+.L189:
+	ldp	x29, x30, [sp], 64
 	ret
 /* end function rt.free_large */
 
@@ -1626,313 +2608,418 @@ _strdata.985:
 
 .section ".text.rt.free_small", "ax"
 _rt.free_small:
-	pushq %rbp
-	movq %rsp, %rbp
-	subq $56, %rsp
-	pushq %rbx
-	pushq %r12
-	pushq %r13
-	movq %rdi, %rbx
-	movq %rsi, %rdi
-	callq _rt.size2bin
-	movq %rbx, %rdi
-	movq %rax, %r12
-	imulq $8, %r12, %rcx
-	leaq _rt.bins(%rip), %rax
-	movq %rax, %rbx
-	addq %rcx, %rbx
-	cmpq $50, %r12
-	jb Lbb196
-	leaq _strdata.974(%rip), %rax
-	movq %rax, -48(%rbp)
-	movq $18, -40(%rbp)
-	movq $18, -32(%rbp)
-	subq $32, %rsp
-	movq %rsp, %rcx
-	movq -32(%rbp), %rax
-	movq %rax, 16(%rcx)
-	movq -40(%rbp), %rax
-	movq %rax, 8(%rcx)
-	movq -48(%rbp), %rax
-	movq %rax, 0(%rcx)
-	movq %rdi, %r13
-	movl $0, %edi
-	callq _rt.abort_fixed
-	movq %r13, %rdi
-	subq $-32, %rsp
-Lbb196:
-	movq (%rbx), %rax
-	movq %rax, (%rdi)
-	imulq $8, %r12, %rcx
-	leaq _rt.bins(%rip), %rax
-	movq %rax, %rbx
-	addq %rcx, %rbx
-	cmpq $50, %r12
-	jb Lbb198
-	leaq _strdata.985(%rip), %rax
-	movq %rax, -24(%rbp)
-	movq $18, -16(%rbp)
-	movq $18, -8(%rbp)
-	subq $32, %rsp
-	movq %rsp, %rcx
-	movq -8(%rbp), %rax
-	movq %rax, 16(%rcx)
-	movq -16(%rbp), %rax
-	movq %rax, 8(%rcx)
-	movq -24(%rbp), %rax
-	movq %rax, 0(%rcx)
-	movq %rdi, %r12
-	movl $0, %edi
-	callq _rt.abort_fixed
-	movq %r12, %rdi
-	subq $-32, %rsp
-Lbb198:
-	movq %rdi, (%rbx)
-	popq %r13
-	popq %r12
-	popq %rbx
-	leave
+	stp	x29, x30, [sp, -144]!
+	mov	x29, sp
+	str	x19, [x29, 136]
+	str	x20, [x29, 128]
+	str	x21, [x29, 120]
+	mov	x19, x0
+	mov	x0, x1
+	adrp	x1, rt.size2bin
+	add	x1, x1, #:lo12:rt.size2bin
+	blr	x1
+	mov	x20, x0
+	mov	x0, x19
+	mov	x1, #8
+	mul	x2, x20, x1
+	adrp	x1, rt.bins
+	add	x1, x1, #:lo12:rt.bins
+	add	x19, x1, x2
+	cmp	x20, #50
+	bcc	.L193
+	add	x2, x29, #64
+	adrp	x1, strdata.974
+	add	x1, x1, #:lo12:strdata.974
+	str	x1, [x2]
+	mov	x2, #8
+	add	x1, x29, #64
+	add	x1, x1, x2
+	mov	x2, #18
+	str	x2, [x1]
+	mov	x2, #8
+	add	x2, x1, x2
+	mov	x1, #18
+	str	x1, [x2]
+	mov	x2, #16
+	add	x1, x29, #64
+	add	x1, x1, x2
+	ldr	x1, [x1]
+	mov	x3, #16
+	add	x2, x29, #16
+	add	x2, x2, x3
+	str	x1, [x2]
+	mov	x2, #8
+	add	x1, x29, #64
+	add	x1, x1, x2
+	ldr	x1, [x1]
+	mov	x3, #8
+	add	x2, x29, #16
+	add	x2, x2, x3
+	str	x1, [x2]
+	mov	x2, #0
+	add	x1, x29, #64
+	add	x1, x1, x2
+	ldr	x1, [x1]
+	mov	x3, #0
+	add	x2, x29, #16
+	add	x2, x2, x3
+	str	x1, [x2]
+	mov	x1, #0
+	mov	x21, x0
+	add	x0, x29, #16
+	adrp	x2, rt.abort_fixed
+	add	x2, x2, #:lo12:rt.abort_fixed
+	blr	x2
+	mov	x0, x21
+.L193:
+	ldr	x1, [x19]
+	str	x1, [x0]
+	mov	x1, #8
+	mul	x2, x20, x1
+	adrp	x1, rt.bins
+	add	x1, x1, #:lo12:rt.bins
+	add	x19, x1, x2
+	cmp	x20, #50
+	bcc	.L195
+	add	x2, x29, #88
+	adrp	x1, strdata.985
+	add	x1, x1, #:lo12:strdata.985
+	str	x1, [x2]
+	mov	x2, #8
+	add	x1, x29, #88
+	add	x1, x1, x2
+	mov	x2, #18
+	str	x2, [x1]
+	mov	x2, #8
+	add	x2, x1, x2
+	mov	x1, #18
+	str	x1, [x2]
+	mov	x2, #16
+	add	x1, x29, #88
+	add	x1, x1, x2
+	ldr	x1, [x1]
+	mov	x3, #16
+	add	x2, x29, #40
+	add	x2, x2, x3
+	str	x1, [x2]
+	mov	x2, #8
+	add	x1, x29, #88
+	add	x1, x1, x2
+	ldr	x1, [x1]
+	mov	x3, #8
+	add	x2, x29, #40
+	add	x2, x2, x3
+	str	x1, [x2]
+	mov	x2, #0
+	add	x1, x29, #88
+	add	x1, x1, x2
+	ldr	x1, [x1]
+	mov	x3, #0
+	add	x2, x29, #40
+	add	x2, x2, x3
+	str	x1, [x2]
+	mov	x1, #0
+	mov	x20, x0
+	add	x0, x29, #40
+	adrp	x2, rt.abort_fixed
+	add	x2, x2, #:lo12:rt.abort_fixed
+	blr	x2
+	mov	x0, x20
+.L195:
+	str	x0, [x19]
+	ldr	x19, [x29, 136]
+	ldr	x20, [x29, 128]
+	ldr	x21, [x29, 120]
+	ldp	x29, x30, [sp], 144
 	ret
 /* end function rt.free_small */
 
 .section ".text.rt.realloc", "ax"
 .globl _rt.realloc
 _rt.realloc:
-	pushq %rbp
-	movq %rsp, %rbp
-	pushq %rbx
-	pushq %r12
-	pushq %r13
-	pushq %r14
-	movq %rdi, %rbx
-	movq %rsi, %rdi
-	cmpq $0, %rdi
-	jz Lbb215
-	cmpq $0, %rbx
-	jz Lbb214
-	movq %rbx, %rax
-	subq $8, %rax
-	movq (%rax), %r12
-	cmpq %rdi, %r12
-	jae Lbb212
-	movq %rdi, %r13
-	movl $49, %edi
-	callq _rt.bin2size
-	movq %r13, %rdi
-	cmpq %rax, %rdi
-	setb %al
-	movzbl %al, %eax
-	jae Lbb206
-	movq %rdi, %r13
-	callq _rt.size2bin
-	movq %r13, %rdi
-	movq %rax, %r13
-	movq %rdi, %r14
-	movq %r12, %rdi
-	callq _rt.size2bin
-	movq %r14, %rdi
-	cmpq %rax, %r13
-	setz %al
-	movzbl %al, %eax
-Lbb206:
-	cmpl $0, %eax
-	jnz Lbb210
-	callq _rt.malloc
-	movq %r12, %rdx
-	movq %rbx, %rdi
-	movq %rax, %rbx
-	cmpq $0, %rbx
-	jnz Lbb209
-	movq %rbx, %rax
-	jmp Lbb217
-Lbb209:
-	movq %rdi, %rsi
-	movq %rdi, %r12
-	movq %rbx, %rdi
-	callq _rt.memcpy
-	movq %r12, %rdi
-	callq _rt.free
-	movq %rbx, %rax
-	jmp Lbb217
-Lbb210:
-	movq %rbx, %rdi
-	movq %rdi, %rax
-	jmp Lbb217
-Lbb212:
-	movq %rbx, %rdi
-	movq %rdi, %rax
-	jmp Lbb217
-Lbb214:
-	callq _rt.malloc
-	jmp Lbb217
-Lbb215:
-	movq %rbx, %rdi
-	callq _rt.free
-	movl $0, %eax
-Lbb217:
-	popq %r14
-	popq %r13
-	popq %r12
-	popq %rbx
-	leave
+	stp	x29, x30, [sp, -48]!
+	mov	x29, sp
+	str	x19, [x29, 40]
+	str	x20, [x29, 32]
+	str	x21, [x29, 24]
+	str	x22, [x29, 16]
+	mov	x19, x0
+	mov	x0, x1
+	cmp	x0, #0
+	beq	.L210
+	cmp	x19, #0
+	beq	.L209
+	mov	x1, #8
+	sub	x1, x19, x1
+	ldr	x20, [x1]
+	cmp	x20, x0
+	bcs	.L208
+	mov	x21, x0
+	mov	x0, #49
+	adrp	x1, rt.bin2size
+	add	x1, x1, #:lo12:rt.bin2size
+	blr	x1
+	mov	x1, x0
+	mov	x0, x21
+	cmp	x0, x1
+	cset	w1, cc
+	cmp	w1, #0
+	beq	.L203
+	mov	x21, x0
+	adrp	x1, rt.size2bin
+	add	x1, x1, #:lo12:rt.size2bin
+	blr	x1
+	mov	x18, x0
+	mov	x0, x21
+	mov	x21, x18
+	mov	x22, x0
+	mov	x0, x20
+	adrp	x1, rt.size2bin
+	add	x1, x1, #:lo12:rt.size2bin
+	blr	x1
+	mov	x1, x0
+	mov	x0, x22
+	cmp	x21, x1
+	cset	w1, eq
+.L203:
+	cmp	w1, #0
+	bne	.L207
+	adrp	x1, rt.malloc
+	add	x1, x1, #:lo12:rt.malloc
+	blr	x1
+	mov	x2, x20
+	mov	x18, x0
+	mov	x0, x19
+	mov	x19, x18
+	cmp	x19, #0
+	bne	.L206
+	mov	x0, x19
+	b	.L212
+.L206:
+	mov	x1, x0
+	mov	x20, x0
+	mov	x0, x19
+	adrp	x3, rt.memcpy
+	add	x3, x3, #:lo12:rt.memcpy
+	blr	x3
+	mov	x0, x20
+	adrp	x1, rt.free
+	add	x1, x1, #:lo12:rt.free
+	blr	x1
+	mov	x0, x19
+	b	.L212
+.L207:
+	mov	x0, x19
+	b	.L212
+.L208:
+	mov	x0, x19
+	b	.L212
+.L209:
+	adrp	x1, rt.malloc
+	add	x1, x1, #:lo12:rt.malloc
+	blr	x1
+	b	.L212
+.L210:
+	mov	x0, x19
+	adrp	x1, rt.free
+	add	x1, x1, #:lo12:rt.free
+	blr	x1
+	mov	x0, #0
+.L212:
+	ldr	x19, [x29, 40]
+	ldr	x20, [x29, 32]
+	ldr	x21, [x29, 24]
+	ldr	x22, [x29, 16]
+	ldp	x29, x30, [sp], 48
 	ret
 /* end function rt.realloc */
 
 .section ".text.rt.memcpy", "ax"
 .globl _rt.memcpy
 _rt.memcpy:
-	pushq %rbp
-	movq %rsp, %rbp
-	movl $0, %eax
-Lbb220:
-	cmpq %rdx, %rax
-	jae Lbb223
-	movzbl (%rsi, %rax, 1), %ecx
-	movb %cl, (%rdi, %rax, 1)
-	addq $1, %rax
-	jmp Lbb220
-Lbb223:
-	leave
+	stp	x29, x30, [sp, -16]!
+	mov	x29, sp
+	mov	x3, #0
+.L215:
+	cmp	x3, x2
+	bcs	.L218
+	add	x5, x0, x3
+	add	x4, x1, x3
+	ldrb	w4, [x4]
+	strb	w4, [x5]
+	mov	x4, #1
+	add	x3, x3, x4
+	b	.L215
+.L218:
+	ldp	x29, x30, [sp], 16
 	ret
 /* end function rt.memcpy */
 
 .section ".text.rt.memmove", "ax"
 .globl _rt.memmove
 _rt.memmove:
-	pushq %rbp
-	movq %rsp, %rbp
-	cmpq %rsi, %rdi
-	jz Lbb235
-	cmpq %rsi, %rdi
-	jb Lbb231
-	movl $0, %eax
-Lbb228:
-	cmpq %rdx, %rax
-	jae Lbb235
-	movq %rdx, %rcx
-	subq %rax, %rcx
-	movq %rcx, %r8
-	subq $1, %r8
-	movq %rdx, %rcx
-	subq %rax, %rcx
-	subq $1, %rcx
-	movzbl (%rsi, %rcx, 1), %ecx
-	movb %cl, (%rdi, %r8, 1)
-	addq $1, %rax
-	jmp Lbb228
-Lbb231:
-	movl $0, %eax
-Lbb232:
-	cmpq %rdx, %rax
-	jae Lbb235
-	movzbl (%rsi, %rax, 1), %ecx
-	movb %cl, (%rdi, %rax, 1)
-	addq $1, %rax
-	jmp Lbb232
-Lbb235:
-	leave
+	stp	x29, x30, [sp, -16]!
+	mov	x29, sp
+	cmp	x0, x1
+	beq	.L230
+	cmp	x0, x1
+	bcc	.L226
+	mov	x3, #0
+.L223:
+	cmp	x3, x2
+	bcs	.L230
+	sub	x4, x2, x3
+	mov	x5, #1
+	sub	x4, x4, x5
+	add	x5, x0, x4
+	sub	x4, x2, x3
+	mov	x6, #1
+	sub	x4, x4, x6
+	add	x4, x1, x4
+	ldrb	w4, [x4]
+	strb	w4, [x5]
+	mov	x4, #1
+	add	x3, x3, x4
+	b	.L223
+.L226:
+	mov	x3, #0
+.L227:
+	cmp	x3, x2
+	bcs	.L230
+	add	x5, x0, x3
+	add	x4, x1, x3
+	ldrb	w4, [x4]
+	strb	w4, [x5]
+	mov	x4, #1
+	add	x3, x3, x4
+	b	.L227
+.L230:
+	ldp	x29, x30, [sp], 16
 	ret
 /* end function rt.memmove */
 
 .section ".text.rt.memset", "ax"
 .globl _rt.memset
 _rt.memset:
-	pushq %rbp
-	movq %rsp, %rbp
-	movl $0, %eax
-Lbb238:
-	cmpq %rdx, %rax
-	jae Lbb241
-	movzbl %sil, %ecx
-	movb %cl, (%rdi, %rax, 1)
-	addq $1, %rax
-	jmp Lbb238
-Lbb241:
-	leave
+	stp	x29, x30, [sp, -16]!
+	mov	x29, sp
+	mov	x3, #0
+.L233:
+	cmp	x3, x2
+	bcs	.L236
+	add	x5, x0, x3
+	uxtb	w4, w1
+	strb	w4, [x5]
+	mov	x4, #1
+	add	x3, x3, x4
+	b	.L233
+.L236:
+	ldp	x29, x30, [sp], 16
 	ret
 /* end function rt.memset */
 
 .section ".text.rt.start_ha", "ax"
 .globl _rt.start_ha
 _rt.start_ha:
-	pushq %rbp
-	movq %rsp, %rbp
-	pushq %rbx
-	pushq %r12
-	leaq ___init_array_start(%rip), %rcx
-	leaq ___init_array_end(%rip), %rax
-	subq %rcx, %rax
-	movl $8, %ecx
-	movl $0, %edx
-	divq %rcx
-	movq %rax, %r12
-	movl $0, %ebx
-Lbb245:
-	cmpq %r12, %rbx
-	jae Lbb248
-	leaq ___init_array_start(%rip), %rax
-	movq (%rax, %rbx, 8), %rax
-	callq *%rax
-	addq $1, %rbx
-	jmp Lbb245
-Lbb248:
-	callq _main
-	leaq ___fini_array_start(%rip), %rcx
-	leaq ___fini_array_end(%rip), %rax
-	subq %rcx, %rax
-	movl $8, %ecx
-	movl $0, %edx
-	divq %rcx
-	movq %rax, %r12
-	movl $0, %ebx
-Lbb250:
-	cmpq %r12, %rbx
-	jae Lbb253
-	leaq ___fini_array_start(%rip), %rax
-	movq (%rax, %rbx, 8), %rax
-	callq *%rax
-	addq $1, %rbx
-	jmp Lbb250
-Lbb253:
-	movl $0, %edi
-	callq _rt.exit
-	popq %r12
-	popq %rbx
-	leave
+	stp	x29, x30, [sp, -32]!
+	mov	x29, sp
+	str	x19, [x29, 24]
+	str	x20, [x29, 16]
+	adrp	x1, __init_array_start
+	add	x1, x1, #:lo12:__init_array_start
+	adrp	x0, __init_array_end
+	add	x0, x0, #:lo12:__init_array_end
+	sub	x0, x0, x1
+	mov	x1, #8
+	udiv	x20, x0, x1
+	mov	x19, #0
+.L240:
+	cmp	x19, x20
+	bcs	.L243
+	mov	x0, #8
+	mul	x1, x19, x0
+	adrp	x0, __init_array_start
+	add	x0, x0, #:lo12:__init_array_start
+	add	x0, x0, x1
+	ldr	x0, [x0]
+	blr	x0
+	mov	x0, #1
+	add	x19, x19, x0
+	b	.L240
+.L243:
+	adrp	x0, main
+	add	x0, x0, #:lo12:main
+	blr	x0
+	adrp	x1, __fini_array_start
+	add	x1, x1, #:lo12:__fini_array_start
+	adrp	x0, __fini_array_end
+	add	x0, x0, #:lo12:__fini_array_end
+	sub	x0, x0, x1
+	mov	x1, #8
+	udiv	x20, x0, x1
+	mov	x19, #0
+.L245:
+	cmp	x19, x20
+	bcs	.L248
+	mov	x0, #8
+	mul	x1, x19, x0
+	adrp	x0, __fini_array_start
+	add	x0, x0, #:lo12:__fini_array_start
+	add	x0, x0, x1
+	ldr	x0, [x0]
+	blr	x0
+	mov	x0, #1
+	add	x19, x19, x0
+	b	.L245
+.L248:
+	mov	w0, #0
+	adrp	x1, rt.exit
+	add	x1, x1, #:lo12:rt.exit
+	blr	x1
+	ldr	x19, [x29, 24]
+	ldr	x20, [x29, 16]
+	ldp	x29, x30, [sp], 32
 	ret
 /* end function rt.start_ha */
 
 .section ".text.rt.strcmp", "ax"
 .globl _rt.strcmp
 _rt.strcmp:
-	pushq %rbp
-	movq %rsp, %rbp
-	movq 24(%rbp), %rcx
-	movq 48(%rbp), %rax
-	cmpq %rax, %rcx
-	jnz Lbb264
-	movq 16(%rbp), %rdx
-	movq 40(%rbp), %rsi
-	movl $0, %eax
-Lbb259:
-	cmpq %rcx, %rax
-	jae Lbb263
-	movzbl (%rdx, %rax, 1), %r8d
-	movzbl (%rsi, %rax, 1), %edi
-	cmpl %edi, %r8d
-	jnz Lbb262
-	addq $1, %rax
-	jmp Lbb259
-Lbb262:
-	movl $0, %eax
-	jmp Lbb265
-Lbb263:
-	movl $1, %eax
-	jmp Lbb265
-Lbb264:
-	movl $0, %eax
-Lbb265:
-	leave
+	stp	x29, x30, [sp, -16]!
+	mov	x29, sp
+	mov	x2, #8
+	add	x2, x0, x2
+	ldr	x2, [x2]
+	mov	x3, #8
+	add	x3, x1, x3
+	ldr	x3, [x3]
+	cmp	x2, x3
+	bne	.L259
+	ldr	x3, [x0]
+	ldr	x4, [x1]
+	mov	x1, #0
+.L254:
+	cmp	x1, x2
+	bcs	.L258
+	add	x5, x3, x1
+	ldrb	w5, [x5]
+	add	x6, x4, x1
+	ldrb	w6, [x6]
+	cmp	w5, w6
+	bne	.L257
+	mov	x5, #1
+	add	x1, x1, x5
+	b	.L254
+.L257:
+	mov	w0, #0
+	b	.L260
+.L258:
+	mov	w0, #1
+	b	.L260
+.L259:
+	mov	w0, #0
+.L260:
+	ldp	x29, x30, [sp], 16
 	ret
 /* end function rt.strcmp */
 
