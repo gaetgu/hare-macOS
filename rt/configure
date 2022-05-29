@@ -77,7 +77,7 @@ rt() {
 			;;
 		Darwin)
 			case $arch in
-				i386)
+				x86_64)
 					arch=x86_64
 					;;
 				arm64)

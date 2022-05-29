@@ -6,7 +6,7 @@ CC=${CC:-cc}
 CFLAGS=${CFLAGS:-}
 LDFLAGS=${LDFLAGS:-}
 LD=${LD:-ld}
-QBE="${QBE:-qbe} -t arm64 -Gm"	# Todo: do this programatically so it works on other platforms
+QBE="${QBE:-qbe} -t $(if [ $(uname -m) = arm64 ]; then echo "arm64"; else echo "amd64_sysv"; fi ) -Gm"
 
 if [ `uname -s` = "OpenBSD" ]
 then
