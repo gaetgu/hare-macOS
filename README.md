@@ -9,6 +9,7 @@ See [Notes](#Notes).
 ## Building
 
 ```
+./configure
 make
 sudo make install
 ```
