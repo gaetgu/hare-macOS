@@ -1,3 +1,7 @@
+# NOTICE:
+I am beginning a transition away from GitHub. You can now find this project at [source hut](https://git.sr.ht/~gaetgu/hare-macOS) instead.
+
+
 # harec
 
 This is the [Hare](https://harelang.org) compiler ported (WIP) to macOS.
